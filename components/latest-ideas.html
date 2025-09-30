@@ -1,0 +1,126 @@
+<!-- Latest Ideas Section -->
+<section class="latest-ideas-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">최신 아이디어</h2>
+            <p class="section-subtitle">방금 전에 등록된 신선한 아이디어들을 확인해보세요</p>
+            <a href="<?php echo SITE_URL; ?>/pages/ideas/list.html" class="section-link">
+                <span class="link-text">모든 아이디어 보기</span>
+                <span class="link-icon">→</span>
+            </a>
+        </div>
+        
+        <div class="ideas-grid">
+            <?php if (isset($latest_ideas) && !empty($latest_ideas)): ?>
+                <?php foreach ($latest_ideas as $idea): ?>
+                <article class="idea-card">
+                    <div class="idea-header">
+                        <div class="idea-meta">
+                            <span class="idea-author">
+                                <span class="author-avatar">
+                                    <?php echo strtoupper(substr($idea['author'], 0, 1)); ?>
+                                </span>
+                                <span class="author-name"><?php echo e($idea['author']); ?></span>
+                            </span>
+                            <span class="idea-date">
+                                <span class="date-icon">🕒</span>
+                                <span class="date-text"><?php echo getRelativeTime($idea['created_at']); ?></span>
+                            </span>
+                        </div>
+                        <div class="idea-stats">
+                            <span class="stat-item">
+                                <span class="stat-icon">👀</span>
+                                <span class="stat-count"><?php echo number_format($idea['view_count']); ?></span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-icon">💬</span>
+                                <span class="stat-count"><?php echo number_format($idea['comment_count']); ?></span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-icon">🌱</span>
+                                <span class="stat-count"><?php echo number_format($idea['fork_count']); ?></span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="idea-content">
+                        <h3 class="idea-title">
+                            <a href="<?php echo SITE_URL; ?>/pages/ideas/detail.html?id=<?php echo $idea['id']; ?>" class="idea-link">
+                                <?php echo e($idea['title']); ?>
+                            </a>
+                        </h3>
+                        <p class="idea-excerpt">
+                            <?php echo e(substr($idea['content'], 0, 150)); ?>
+                            <?php if (strlen($idea['content']) > 150): ?>...<?php endif; ?>
+                        </p>
+                    </div>
+                    
+                    <div class="idea-footer">
+                        <div class="idea-tags">
+                            <?php if (isset($idea['tags']) && !empty($idea['tags'])): ?>
+                                <?php foreach (array_slice($idea['tags'], 0, 3) as $tag): ?>
+                                <span class="idea-tag">
+                                    <span class="tag-icon">🏷️</span>
+                                    <span class="tag-text"><?php echo e($tag['name']); ?></span>
+                                </span>
+                                <?php endforeach; ?>
+                                <?php if (count($idea['tags']) > 3): ?>
+                                <span class="idea-tag tag-more">
+                                    <span class="tag-text">+<?php echo count($idea['tags']) - 3; ?></span>
+                                </span>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <div class="idea-actions">
+                            <a href="<?php echo SITE_URL; ?>/pages/ideas/detail.html?id=<?php echo $idea['id']; ?>" class="action-btn">
+                                <span class="btn-icon">👀</span>
+                                <span class="btn-text">자세히 보기</span>
+                            </a>
+                            <?php if (isLoggedIn()): ?>
+                            <button class="action-btn fork-btn" data-idea-id="<?php echo $idea['id']; ?>">
+                                <span class="btn-icon">🌱</span>
+                                <span class="btn-text">포크하기</span>
+                            </button>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </article>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <!-- Empty State -->
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <span class="empty-emoji">💡</span>
+                    </div>
+                    <h3 class="empty-title">아직 등록된 아이디어가 없습니다</h3>
+                    <p class="empty-description">
+                        첫 번째 아이디어를 작성해보세요!<br>
+                        여러분의 창의적인 생각이 세상을 바꿀 수 있습니다.
+                    </p>
+                    <?php if (isLoggedIn()): ?>
+                    <a href="<?php echo SITE_URL; ?>/pages/ideas/create.html" class="btn btn-primary">
+                        <span class="btn-icon">✏️</span>
+                        <span class="btn-text">아이디어 작성하기</span>
+                    </a>
+                    <?php else: ?>
+                    <a href="<?php echo SITE_URL; ?>/pages/auth/register.html" class="btn btn-primary">
+                        <span class="btn-icon">🚀</span>
+                        <span class="btn-text">회원가입하고 시작하기</span>
+                    </a>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+        
+        <!-- Load More Button -->
+        <?php if (isset($latest_ideas) && count($latest_ideas) >= 6): ?>
+        <div class="load-more-container">
+            <button class="btn btn-outline load-more-btn" data-type="latest">
+                <span class="btn-icon">📄</span>
+                <span class="btn-text">더 많은 아이디어 보기</span>
+            </button>
+        </div>
+        <?php endif; ?>
+    </div>
+</section>

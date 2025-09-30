@@ -1,0 +1,601 @@
+/* Responsive CSS - 반응형 스타일 */
+
+/* Large Desktop (1200px and up) */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1200px;
+    }
+    
+    .hero-title-main {
+        font-size: 4rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Desktop (992px to 1199px) */
+@media (max-width: 1199px) {
+    .container {
+        max-width: 960px;
+    }
+    
+    .hero-content {
+        gap: 40px;
+    }
+    
+    .hero-title-main {
+        font-size: 3rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .footer-links {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Tablet (768px to 991px) */
+@media (max-width: 991px) {
+    .container {
+        max-width: 720px;
+        padding: 0 15px;
+    }
+    
+    /* Navigation */
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 0 0 12px 12px;
+    }
+    
+    .nav-menu.active {
+        display: flex;
+    }
+    
+    .mobile-menu-toggle {
+        display: flex;
+    }
+    
+    .nav-item {
+        width: 100%;
+    }
+    
+    .nav-link {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 15px 20px;
+    }
+    
+    /* Hero Section */
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+    }
+    
+    .hero-title-main {
+        font-size: 2.5rem;
+    }
+    
+    .hero-title-sub {
+        font-size: 1.1rem;
+    }
+    
+    .hero-features {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .hero-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .hero-image-container {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .idea-bubbles {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .bubble {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+    }
+    
+    /* Stats Section */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .stat-card {
+        padding: 25px;
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+    }
+    
+    .stats-info {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .stats-highlight {
+        gap: 30px;
+    }
+    
+    /* Footer */
+    .footer-links {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+    
+    .footer-bottom-content {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .footer-stats {
+        gap: 20px;
+    }
+}
+
+/* Mobile Large (576px to 767px) */
+@media (max-width: 767px) {
+    .container {
+        max-width: 540px;
+        padding: 0 15px;
+    }
+    
+    /* Typography */
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.5rem; }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    /* Header */
+    .header-content {
+        padding: 10px 0;
+    }
+    
+    .site-title {
+        font-size: 1.3rem;
+    }
+    
+    .user-actions {
+        gap: 10px;
+    }
+    
+    .guest-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .btn-large {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+    
+    /* Hero Section */
+    .hero-section {
+        min-height: 80vh;
+        padding: 60px 0;
+    }
+    
+    .hero-title-main {
+        font-size: 2rem;
+    }
+    
+    .hero-title-sub {
+        font-size: 1rem;
+    }
+    
+    .hero-description {
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+    
+    .hero-features {
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .hero-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .hero-image-container {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .idea-bubbles {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .bubble {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    /* Stats Section */
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .stat-card {
+        padding: 20px;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .stats-highlight {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    /* Sections */
+    section {
+        padding: 40px 0;
+    }
+    
+    .section-header {
+        margin-bottom: 30px;
+    }
+    
+    /* Footer */
+    .footer-content {
+        gap: 30px;
+    }
+    
+    .footer-links {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .social-links {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .footer-stats {
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+    }
+    
+    /* Back to Top */
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+    }
+}
+
+/* Mobile Small (up to 575px) */
+@media (max-width: 575px) {
+    .container {
+        padding: 0 10px;
+    }
+    
+    /* Typography */
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+    
+    .section-title {
+        font-size: 1.75rem;
+    }
+    
+    /* Header */
+    .site-title {
+        font-size: 1.2rem;
+    }
+    
+    .logo-img {
+        width: 35px;
+        height: 35px;
+    }
+    
+    /* Hero Section */
+    .hero-title-main {
+        font-size: 1.75rem;
+    }
+    
+    .hero-title-sub {
+        font-size: 0.95rem;
+    }
+    
+    .hero-description {
+        font-size: 0.95rem;
+    }
+    
+    .hero-image-container {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .idea-bubbles {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .bubble {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+    
+    /* Stats */
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-number {
+        font-size: 1.75rem;
+    }
+    
+    .stat-emoji {
+        font-size: 2.5rem;
+    }
+    
+    /* Buttons */
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+    
+    .btn-large {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+    
+    /* Footer */
+    .footer-title {
+        font-size: 1.5rem;
+    }
+    
+    .footer-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .site-header,
+    .site-footer,
+    .back-to-top,
+    .mobile-menu-toggle,
+    .hero-actions,
+    .cta-section {
+        display: none !important;
+    }
+    
+    .main-content {
+        padding-top: 0;
+    }
+    
+    .hero-section {
+        min-height: auto;
+        padding: 20px 0;
+    }
+    
+    .hero-content {
+        grid-template-columns: 1fr;
+        text-align: left;
+    }
+    
+    .hero-visual {
+        display: none;
+    }
+    
+    * {
+        color: #000 !important;
+        background: #fff !important;
+    }
+    
+    a {
+        text-decoration: underline;
+    }
+    
+    .card {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .logo-img {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .bubble {
+        animation: none;
+    }
+    
+    .scroll-indicator {
+        animation: none;
+    }
+    
+    .loading-spinner {
+        animation: none;
+    }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+    .site-header {
+        background: rgba(44, 62, 80, 0.95);
+        border-bottom-color: #34495e;
+    }
+    
+    .nav-link {
+        color: #bdc3c7;
+    }
+    
+    .nav-link:hover,
+    .nav-link.active {
+        color: #3498db;
+        background: rgba(52, 152, 219, 0.2);
+    }
+    
+    .user-name {
+        color: #ecf0f1;
+    }
+    
+    .user-dropdown {
+        background: #34495e;
+        border: 1px solid #2c3e50;
+    }
+    
+    .dropdown-link {
+        color: #ecf0f1;
+    }
+    
+    .dropdown-link:hover {
+        background: rgba(52, 152, 219, 0.2);
+    }
+    
+    .breadcrumb-nav {
+        background: #34495e;
+        border-bottom-color: #2c3e50;
+    }
+    
+    .breadcrumb-link {
+        color: #3498db;
+    }
+    
+    .breadcrumb-current {
+        color: #bdc3c7;
+    }
+    
+    .stats-section {
+        background: #34495e;
+    }
+    
+    .stat-card {
+        background: #2c3e50;
+        border-color: #34495e;
+    }
+    
+    .stat-label {
+        color: #ecf0f1;
+    }
+    
+    .stat-description {
+        color: #bdc3c7;
+    }
+}
+
+/* Landscape Orientation */
+@media (orientation: landscape) and (max-height: 500px) {
+    .hero-section {
+        min-height: 100vh;
+        padding: 20px 0;
+    }
+    
+    .hero-content {
+        gap: 20px;
+    }
+    
+    .hero-title-main {
+        font-size: 2rem;
+    }
+    
+    .hero-description {
+        margin-bottom: 20px;
+    }
+    
+    .hero-features {
+        margin-bottom: 20px;
+    }
+    
+    .scroll-indicator {
+        display: none;
+    }
+}
+
+/* Hover Support */
+@media (hover: hover) {
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .nav-link:hover {
+        background: rgba(52, 152, 219, 0.1);
+    }
+}
+
+/* No Hover Support (Touch Devices) */
+@media (hover: none) {
+    .card:hover {
+        transform: none;
+    }
+    
+    .btn:hover {
+        transform: none;
+    }
+    
+    .nav-link:hover {
+        background: none;
+    }
+}

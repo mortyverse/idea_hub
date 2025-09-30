@@ -1,0 +1,163 @@
+<!-- Popular Ideas Section -->
+<section class="popular-ideas-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">인기 아이디어</h2>
+            <p class="section-subtitle">많은 사람들이 관심을 보인 인기 아이디어들을 확인해보세요</p>
+            <a href="<?php echo SITE_URL; ?>/pages/ideas/list.html?sort=popular" class="section-link">
+                <span class="link-text">인기순으로 보기</span>
+                <span class="link-icon">→</span>
+            </a>
+        </div>
+        
+        <div class="ideas-grid">
+            <?php if (isset($popular_ideas) && !empty($popular_ideas)): ?>
+                <?php foreach ($popular_ideas as $index => $idea): ?>
+                <article class="idea-card popular-card">
+                    <!-- Popular Badge -->
+                    <div class="popular-badge">
+                        <span class="badge-icon">🔥</span>
+                        <span class="badge-text">인기</span>
+                        <span class="badge-rank">#<?php echo $index + 1; ?></span>
+                    </div>
+                    
+                    <div class="idea-header">
+                        <div class="idea-meta">
+                            <span class="idea-author">
+                                <span class="author-avatar">
+                                    <?php echo strtoupper(substr($idea['author'], 0, 1)); ?>
+                                </span>
+                                <span class="author-name"><?php echo e($idea['author']); ?></span>
+                            </span>
+                            <span class="idea-date">
+                                <span class="date-icon">🕒</span>
+                                <span class="date-text"><?php echo getRelativeTime($idea['created_at']); ?></span>
+                            </span>
+                        </div>
+                        <div class="idea-stats">
+                            <span class="stat-item stat-highlight">
+                                <span class="stat-icon">👀</span>
+                                <span class="stat-count"><?php echo number_format($idea['view_count']); ?></span>
+                            </span>
+                            <span class="stat-item stat-highlight">
+                                <span class="stat-icon">💬</span>
+                                <span class="stat-count"><?php echo number_format($idea['comment_count']); ?></span>
+                            </span>
+                            <span class="stat-item stat-highlight">
+                                <span class="stat-icon">🌱</span>
+                                <span class="stat-count"><?php echo number_format($idea['fork_count']); ?></span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="idea-content">
+                        <h3 class="idea-title">
+                            <a href="<?php echo SITE_URL; ?>/pages/ideas/detail.html?id=<?php echo $idea['id']; ?>" class="idea-link">
+                                <?php echo e($idea['title']); ?>
+                            </a>
+                        </h3>
+                        <p class="idea-excerpt">
+                            <?php echo e(substr($idea['content'], 0, 150)); ?>
+                            <?php if (strlen($idea['content']) > 150): ?>...<?php endif; ?>
+                        </p>
+                    </div>
+                    
+                    <div class="idea-footer">
+                        <div class="idea-tags">
+                            <?php if (isset($idea['tags']) && !empty($idea['tags'])): ?>
+                                <?php foreach (array_slice($idea['tags'], 0, 3) as $tag): ?>
+                                <span class="idea-tag">
+                                    <span class="tag-icon">🏷️</span>
+                                    <span class="tag-text"><?php echo e($tag['name']); ?></span>
+                                </span>
+                                <?php endforeach; ?>
+                                <?php if (count($idea['tags']) > 3): ?>
+                                <span class="idea-tag tag-more">
+                                    <span class="tag-text">+<?php echo count($idea['tags']) - 3; ?></span>
+                                </span>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <div class="idea-actions">
+                            <a href="<?php echo SITE_URL; ?>/pages/ideas/detail.html?id=<?php echo $idea['id']; ?>" class="action-btn">
+                                <span class="btn-icon">👀</span>
+                                <span class="btn-text">자세히 보기</span>
+                            </a>
+                            <?php if (isLoggedIn()): ?>
+                            <button class="action-btn fork-btn" data-idea-id="<?php echo $idea['id']; ?>">
+                                <span class="btn-icon">🌱</span>
+                                <span class="btn-text">포크하기</span>
+                            </button>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    
+                    <!-- Popularity Score -->
+                    <div class="popularity-score">
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: <?php echo min(100, ($idea['popularity_score'] / 100) * 100); ?>%"></div>
+                        </div>
+                        <span class="score-text">인기도: <?php echo $idea['popularity_score']; ?>점</span>
+                    </div>
+                </article>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <!-- Empty State -->
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <span class="empty-emoji">🔥</span>
+                    </div>
+                    <h3 class="empty-title">아직 인기 아이디어가 없습니다</h3>
+                    <p class="empty-description">
+                        아이디어에 댓글을 달고 포크해보세요!<br>
+                        여러분의 참여가 인기 아이디어를 만들어냅니다.
+                    </p>
+                    <a href="<?php echo SITE_URL; ?>/pages/ideas/list.html" class="btn btn-primary">
+                        <span class="btn-icon">💡</span>
+                        <span class="btn-text">아이디어 둘러보기</span>
+                    </a>
+                </div>
+            <?php endif; ?>
+        </div>
+        
+        <!-- Popular Ideas Ranking -->
+        <?php if (isset($popular_ideas) && count($popular_ideas) >= 3): ?>
+        <div class="popular-ranking">
+            <h3 class="ranking-title">이번 주 인기 아이디어 TOP 3</h3>
+            <div class="ranking-list">
+                <?php foreach (array_slice($popular_ideas, 0, 3) as $index => $idea): ?>
+                <div class="ranking-item">
+                    <div class="ranking-number">
+                        <span class="rank-badge rank-<?php echo $index + 1; ?>">
+                            <?php echo $index + 1; ?>
+                        </span>
+                    </div>
+                    <div class="ranking-content">
+                        <h4 class="ranking-title">
+                            <a href="<?php echo SITE_URL; ?>/pages/ideas/detail.html?id=<?php echo $idea['id']; ?>">
+                                <?php echo e($idea['title']); ?>
+                            </a>
+                        </h4>
+                        <div class="ranking-stats">
+                            <span class="ranking-stat">
+                                <span class="stat-icon">👀</span>
+                                <span class="stat-count"><?php echo number_format($idea['view_count']); ?></span>
+                            </span>
+                            <span class="ranking-stat">
+                                <span class="stat-icon">💬</span>
+                                <span class="stat-count"><?php echo number_format($idea['comment_count']); ?></span>
+                            </span>
+                            <span class="ranking-stat">
+                                <span class="stat-icon">🌱</span>
+                                <span class="stat-count"><?php echo number_format($idea['fork_count']); ?></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+    </div>
+</section>

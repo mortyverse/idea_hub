@@ -1,0 +1,116 @@
+<!-- Navigation Header -->
+<header class="site-header">
+    <div class="container">
+        <div class="header-content">
+            <!-- Logo and Site Title -->
+            <div class="site-branding">
+                <a href="<?php echo SITE_URL; ?>" class="site-logo">
+                    <img src="<?php echo ASSETS_URL; ?>/images/icons/logo.svg" alt="<?php echo SITE_NAME; ?> 로고" class="logo-img">
+                    <span class="site-title"><?php echo SITE_NAME; ?></span>
+                </a>
+            </div>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" aria-label="메뉴 열기/닫기" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+            
+            <!-- Main Navigation -->
+            <nav class="main-navigation" role="navigation" aria-label="메인 네비게이션">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="<?php echo SITE_URL; ?>" class="nav-link <?php echo isCurrentPage('home') ? 'active' : ''; ?>">
+                            <span class="nav-icon">🏠</span>
+                            <span class="nav-text">홈</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo SITE_URL; ?>/pages/ideas/list.html" class="nav-link <?php echo isCurrentPage('ideas') ? 'active' : ''; ?>">
+                            <span class="nav-icon">💡</span>
+                            <span class="nav-text">아이디어</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo SITE_URL; ?>/pages/mindmap/list.html" class="nav-link <?php echo isCurrentPage('mindmap') ? 'active' : ''; ?>">
+                            <span class="nav-icon">🧠</span>
+                            <span class="nav-text">마인드맵</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo SITE_URL; ?>/pages/tags/list.html" class="nav-link <?php echo isCurrentPage('tags') ? 'active' : ''; ?>">
+                            <span class="nav-icon">🏷️</span>
+                            <span class="nav-text">태그</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo SITE_URL; ?>/pages/search/index.html" class="nav-link <?php echo isCurrentPage('search') ? 'active' : ''; ?>">
+                            <span class="nav-icon">🔍</span>
+                            <span class="nav-text">검색</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- User Actions -->
+            <div class="user-actions">
+                <?php if (isLoggedIn()): ?>
+                    <!-- Logged in user menu -->
+                    <div class="user-menu">
+                        <button class="user-toggle" aria-label="사용자 메뉴" aria-expanded="false">
+                            <span class="user-avatar">
+                                <?php 
+                                $user = getCurrentUser();
+                                echo strtoupper(substr($user['username'], 0, 1));
+                                ?>
+                            </span>
+                            <span class="user-name"><?php echo e($user['username']); ?></span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <ul class="user-dropdown">
+                            <li><a href="<?php echo SITE_URL; ?>/pages/profile/user.html" class="dropdown-link">프로필</a></li>
+                            <li><a href="<?php echo SITE_URL; ?>/pages/profile/settings.html" class="dropdown-link">설정</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a href="<?php echo SITE_URL; ?>/api/auth/logout.php" class="dropdown-link logout-link">로그아웃</a></li>
+                        </ul>
+                    </div>
+                <?php else: ?>
+                    <!-- Guest user actions -->
+                    <div class="guest-actions">
+                        <a href="<?php echo SITE_URL; ?>/pages/auth/login.html" class="btn btn-outline">로그인</a>
+                        <a href="<?php echo SITE_URL; ?>/pages/auth/register.html" class="btn btn-primary">회원가입</a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Mobile Navigation Overlay -->
+<div class="mobile-nav-overlay" style="display: none;"></div>
+
+<!-- Breadcrumb Navigation -->
+<?php if (isset($breadcrumbs) && !empty($breadcrumbs)): ?>
+<nav class="breadcrumb-nav" aria-label="브레드크럼 네비게이션">
+    <div class="container">
+        <ol class="breadcrumb-list">
+            <li class="breadcrumb-item">
+                <a href="<?php echo SITE_URL; ?>" class="breadcrumb-link">홈</a>
+            </li>
+            <?php foreach ($breadcrumbs as $breadcrumb): ?>
+            <li class="breadcrumb-item">
+                <?php if (isset($breadcrumb['url'])): ?>
+                    <a href="<?php echo e($breadcrumb['url']); ?>" class="breadcrumb-link"><?php echo e($breadcrumb['title']); ?></a>
+                <?php else: ?>
+                    <span class="breadcrumb-current"><?php echo e($breadcrumb['title']); ?></span>
+                <?php endif; ?>
+            </li>
+            <?php endforeach; ?>
+        </ol>
+    </div>
+</nav>
+<?php endif; ?>
+
+<!-- Main Content Wrapper -->
+<main id="main-content" class="main-content">

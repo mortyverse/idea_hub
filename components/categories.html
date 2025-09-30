@@ -1,0 +1,157 @@
+<!-- Categories Section -->
+<section class="categories-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">카테고리별 아이디어</h2>
+            <p class="section-subtitle">관심 있는 분야의 아이디어를 쉽게 찾아보세요</p>
+            <a href="<?php echo SITE_URL; ?>/pages/tags/list.html" class="section-link">
+                <span class="link-text">모든 태그 보기</span>
+                <span class="link-icon">→</span>
+            </a>
+        </div>
+        
+        <div class="categories-grid">
+            <?php 
+            $categories = isset($categories) ? $categories : [
+                [
+                    'name' => '기술',
+                    'icon' => '💻',
+                    'description' => 'IT, 프로그래밍, 개발 관련 아이디어',
+                    'count' => 0,
+                    'color' => '#3498db'
+                ],
+                [
+                    'name' => '디자인',
+                    'icon' => '🎨',
+                    'description' => 'UI/UX, 그래픽, 창작 관련 아이디어',
+                    'count' => 0,
+                    'color' => '#e74c3c'
+                ],
+                [
+                    'name' => '비즈니스',
+                    'icon' => '💼',
+                    'description' => '창업, 마케팅, 경영 관련 아이디어',
+                    'count' => 0,
+                    'color' => '#2ecc71'
+                ],
+                [
+                    'name' => '교육',
+                    'icon' => '📚',
+                    'description' => '학습, 교육, 연구 관련 아이디어',
+                    'count' => 0,
+                    'color' => '#f39c12'
+                ],
+                [
+                    'name' => '라이프스타일',
+                    'icon' => '🏠',
+                    'description' => '일상, 취미, 생활 관련 아이디어',
+                    'count' => 0,
+                    'color' => '#9b59b6'
+                ],
+                [
+                    'name' => '환경',
+                    'icon' => '🌱',
+                    'description' => '환경보호, 지속가능성 관련 아이디어',
+                    'count' => 0,
+                    'color' => '#1abc9c'
+                ],
+                [
+                    'name' => '건강',
+                    'icon' => '🏥',
+                    'description' => '의료, 건강, 웰빙 관련 아이디어',
+                    'count' => 0,
+                    'color' => '#e67e22'
+                ],
+                [
+                    'name' => '엔터테인먼트',
+                    'icon' => '🎬',
+                    'description' => '게임, 영화, 음악 관련 아이디어',
+                    'count' => 0,
+                    'color' => '#e91e63'
+                ]
+            ];
+            ?>
+            
+            <?php foreach ($categories as $category): ?>
+            <div class="category-card" style="--category-color: <?php echo $category['color']; ?>">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <span class="category-emoji"><?php echo $category['icon']; ?></span>
+                    </div>
+                    <div class="category-info">
+                        <h3 class="category-name"><?php echo e($category['name']); ?></h3>
+                        <p class="category-description"><?php echo e($category['description']); ?></p>
+                    </div>
+                </div>
+                
+                <div class="category-stats">
+                    <div class="category-count">
+                        <span class="count-number"><?php echo number_format($category['count']); ?></span>
+                        <span class="count-label">아이디어</span>
+                    </div>
+                    <div class="category-trend">
+                        <span class="trend-icon">📈</span>
+                        <span class="trend-text">활발</span>
+                    </div>
+                </div>
+                
+                <div class="category-actions">
+                    <a href="<?php echo SITE_URL; ?>/pages/ideas/list.html?category=<?php echo urlencode($category['name']); ?>" class="category-link">
+                        <span class="link-text">아이디어 보기</span>
+                        <span class="link-icon">→</span>
+                    </a>
+                    <?php if (isLoggedIn()): ?>
+                    <a href="<?php echo SITE_URL; ?>/pages/ideas/create.html?category=<?php echo urlencode($category['name']); ?>" class="category-action-btn">
+                        <span class="btn-icon">✏️</span>
+                        <span class="btn-text">작성하기</span>
+                    </a>
+                    <?php endif; ?>
+                </div>
+                
+                <!-- Category Preview -->
+                <div class="category-preview">
+                    <?php if (isset($category['recent_ideas']) && !empty($category['recent_ideas'])): ?>
+                        <?php foreach (array_slice($category['recent_ideas'], 0, 2) as $idea): ?>
+                        <div class="preview-item">
+                            <span class="preview-icon">💡</span>
+                            <span class="preview-title"><?php echo e(substr($idea['title'], 0, 30)); ?>...</span>
+                        </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="preview-empty">
+                            <span class="empty-text">아직 아이디어가 없습니다</span>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <!-- Popular Tags -->
+        <div class="popular-tags">
+            <h3 class="tags-title">인기 태그</h3>
+            <div class="tags-cloud">
+                <?php 
+                $popular_tags = isset($popular_tags) ? $popular_tags : [
+                    ['name' => '창의적', 'count' => 0],
+                    ['name' => '혁신', 'count' => 0],
+                    ['name' => '협업', 'count' => 0],
+                    ['name' => '문제해결', 'count' => 0],
+                    ['name' => '효율성', 'count' => 0],
+                    ['name' => '사용자경험', 'count' => 0],
+                    ['name' => '지속가능', 'count' => 0],
+                    ['name' => '접근성', 'count' => 0]
+                ];
+                ?>
+                <?php foreach ($popular_tags as $tag): ?>
+                <a href="<?php echo SITE_URL; ?>/pages/tags/detail.html?tag=<?php echo urlencode($tag['name']); ?>" 
+                   class="tag-cloud-item" 
+                   style="font-size: <?php echo max(12, min(20, 12 + ($tag['count'] / 10))); ?>px;">
+                    <span class="tag-text"><?php echo e($tag['name']); ?></span>
+                    <span class="tag-count"><?php echo $tag['count']; ?></span>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</section>

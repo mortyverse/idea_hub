@@ -1,0 +1,82 @@
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-background">
+        <div class="hero-overlay"></div>
+    </div>
+    
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="hero-title-main">아이디어 허브</span>
+                    <span class="hero-title-sub">집단지성으로 아이디어를 발전시키는 플랫폼</span>
+                </h1>
+                
+                <p class="hero-description">
+                    세상의 모든 아이디어를 한곳에 모아<br>
+                    함께 생각하고, 함께 발전시키는<br>
+                    <strong>창의적인 협업 공간</strong>입니다.
+                </p>
+                
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <span class="feature-icon">💡</span>
+                        <span class="feature-text">아이디어 공유</span>
+                    </div>
+                    <div class="hero-feature">
+                        <span class="feature-icon">🧠</span>
+                        <span class="feature-text">마인드맵 협업</span>
+                    </div>
+                    <div class="hero-feature">
+                        <span class="feature-icon">🌱</span>
+                        <span class="feature-text">아이디어 포크</span>
+                    </div>
+                </div>
+                
+                <div class="hero-actions">
+                    <?php if (isLoggedIn()): ?>
+                        <a href="<?php echo SITE_URL; ?>/pages/ideas/create.html" class="btn btn-primary btn-large">
+                            <span class="btn-icon">✏️</span>
+                            <span class="btn-text">아이디어 작성하기</span>
+                        </a>
+                        <a href="<?php echo SITE_URL; ?>/pages/ideas/list.html" class="btn btn-outline btn-large">
+                            <span class="btn-icon">👀</span>
+                            <span class="btn-text">아이디어 둘러보기</span>
+                        </a>
+                    <?php else: ?>
+                        <a href="<?php echo SITE_URL; ?>/pages/auth/register.html" class="btn btn-primary btn-large">
+                            <span class="btn-icon">🚀</span>
+                            <span class="btn-text">지금 시작하기</span>
+                        </a>
+                        <a href="<?php echo SITE_URL; ?>/pages/ideas/list.html" class="btn btn-outline btn-large">
+                            <span class="btn-icon">👀</span>
+                            <span class="btn-text">둘러보기</span>
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="hero-image-container">
+                    <div class="hero-image-placeholder">
+                        <div class="idea-bubbles">
+                            <div class="bubble bubble-1">💡</div>
+                            <div class="bubble bubble-2">🧠</div>
+                            <div class="bubble bubble-3">💭</div>
+                            <div class="bubble bubble-4">✨</div>
+                            <div class="bubble bubble-5">🌟</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator">
+        <div class="scroll-arrow">
+            <span class="scroll-text">더 알아보기</span>
+            <div class="scroll-icon">↓</div>
+        </div>
+    </div>
+</section>

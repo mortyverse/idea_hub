@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="집단지성으로 아이디어를 발전시키는 오픈소스 아이디어 플랫폼">
+    <meta name="keywords" content="아이디어, 창의, 협업, 마인드맵, 집단지성">
+    <meta name="author" content="아이디어 허브">
+    
+    <title>아이디어 허브 - 집단지성으로 아이디어를 발전시키는 플랫폼</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💡</text></svg>">
+    
+    <!-- Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="assets/css/common/main.css">
+    <link rel="stylesheet" href="assets/css/common/components.css">
+    <link rel="stylesheet" href="assets/css/common/responsive.css">
+</head>
+<body class="home-page">
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">메인 콘텐츠로 건너뛰기</a>
+    
+    <!-- Loading indicator -->
+    <div id="loading-indicator" class="loading-indicator" style="display: none;">
+        <div class="loading-spinner"></div>
+        <span>로딩 중...</span>
+    </div>
+    
+    <!-- Main container -->
+    <div class="main-container">
+        <!-- Navigation Header -->
+        <header class="site-header">
+            <div class="container">
+                <div class="header-content">
+                    <!-- Logo and Site Title -->
+                    <div class="site-branding">
+                        <a href="#" class="site-logo">
+                            <span class="logo-img">💡</span>
+                            <span class="site-title">아이디어 허브</span>
+                        </a>
+                    </div>
+                    
+                    <!-- Mobile Menu Toggle -->
+                    <button class="mobile-menu-toggle" aria-label="메뉴 열기/닫기" aria-expanded="false">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                    
+                    <!-- Main Navigation -->
+                    <nav class="main-navigation" role="navigation" aria-label="메인 네비게이션">
+                        <ul class="nav-menu">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link active">
+                                    <span class="nav-icon">🏠</span>
+                                    <span class="nav-text">홈</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <span class="nav-icon">💡</span>
+                                    <span class="nav-text">아이디어</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <span class="nav-icon">🧠</span>
+                                    <span class="nav-text">마인드맵</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <span class="nav-icon">🏷️</span>
+                                    <span class="nav-text">태그</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <span class="nav-icon">🔍</span>
+                                    <span class="nav-text">검색</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    
+                    <!-- User Actions -->
+                    <div class="user-actions">
+                        <div class="guest-actions">
+                            <a href="#" class="btn btn-outline">로그인</a>
+                            <a href="#" class="btn btn-primary">회원가입</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Mobile Navigation Overlay -->
+        <div class="mobile-nav-overlay" style="display: none;"></div>
+        
+        <!-- Main Content Wrapper -->
+        <main id="main-content" class="main-content">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-background">
+                    <div class="hero-overlay"></div>
+                </div>
+                
+                <div class="container">
+                    <div class="hero-content">
+                        <div class="hero-text">
+                            <h1 class="hero-title">
+                                <span class="hero-title-main">아이디어 허브</span>
+                                <span class="hero-title-sub">집단지성으로 아이디어를 발전시키는 플랫폼</span>
+                            </h1>
+                            
+                            <p class="hero-description">
+                                세상의 모든 아이디어를 한곳에 모아<br>
+                                함께 생각하고, 함께 발전시키는<br>
+                                <strong>창의적인 협업 공간</strong>입니다.
+                            </p>
+                            
+                            <div class="hero-features">
+                                <div class="hero-feature">
+                                    <span class="feature-icon">💡</span>
+                                    <span class="feature-text">아이디어 공유</span>
+                                </div>
+                                <div class="hero-feature">
+                                    <span class="feature-icon">🧠</span>
+                                    <span class="feature-text">마인드맵 협업</span>
+                                </div>
+                                <div class="hero-feature">
+                                    <span class="feature-icon">🌱</span>
+                                    <span class="feature-text">아이디어 포크</span>
+                                </div>
+                            </div>
+                            
+                            <div class="hero-actions">
+                                <a href="#" class="btn btn-primary btn-large">
+                                    <span class="btn-icon">🚀</span>
+                                    <span class="btn-text">지금 시작하기</span>
+                                </a>
+                                <a href="#" class="btn btn-outline btn-large">
+                                    <span class="btn-icon">👀</span>
+                                    <span class="btn-text">둘러보기</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="hero-visual">
+                            <div class="hero-image-container">
+                                <div class="hero-image-placeholder">
+                                    <div class="idea-bubbles">
+                                        <div class="bubble bubble-1">💡</div>
+                                        <div class="bubble bubble-2">🧠</div>
+                                        <div class="bubble bubble-3">💭</div>
+                                        <div class="bubble bubble-4">✨</div>
+                                        <div class="bubble bubble-5">🌟</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Scroll indicator -->
+                <div class="scroll-indicator">
+                    <div class="scroll-arrow">
+                        <span class="scroll-text">더 알아보기</span>
+                        <div class="scroll-icon">↓</div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Stats Section -->
+            <section class="stats-section">
+                <div class="container">
+                    <div class="stats-header">
+                        <h2 class="stats-title">아이디어 허브 현황</h2>
+                        <p class="stats-subtitle">함께 만들어가는 창의적인 아이디어 생태계</p>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <span class="stat-emoji">💡</span>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" data-target="1250">0</div>
+                                <div class="stat-label">총 아이디어</div>
+                                <div class="stat-description">사용자들이 공유한 아이디어 수</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <span class="stat-emoji">👥</span>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" data-target="340">0</div>
+                                <div class="stat-label">활성 사용자</div>
+                                <div class="stat-description">아이디어에 참여하는 사용자 수</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <span class="stat-emoji">🧠</span>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" data-target="89">0</div>
+                                <div class="stat-label">마인드맵</div>
+                                <div class="stat-description">협업으로 만들어진 마인드맵 수</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <span class="stat-emoji">💬</span>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" data-target="5670">0</div>
+                                <div class="stat-label">댓글</div>
+                                <div class="stat-description">아이디어에 달린 댓글 수</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <span class="stat-emoji">🌱</span>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" data-target="234">0</div>
+                                <div class="stat-label">포크</div>
+                                <div class="stat-description">발전된 아이디어 포크 수</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <span class="stat-emoji">🏷️</span>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" data-target="156">0</div>
+                                <div class="stat-label">태그</div>
+                                <div class="stat-description">아이디어 분류 태그 수</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Stats Info -->
+                    <div class="stats-info">
+                        <div class="stats-highlight">
+                            <div class="highlight-item">
+                                <span class="highlight-number">12</span>
+                                <span class="highlight-label">오늘 새로 등록된 아이디어</span>
+                            </div>
+                            <div class="highlight-item">
+                                <span class="highlight-number">45</span>
+                                <span class="highlight-label">오늘 활성 사용자</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-trend">
+                            <div class="trend-item trend-up">
+                                <span class="trend-icon">📈</span>
+                                <span class="trend-text">지난 주 대비 아이디어 증가율</span>
+                                <span class="trend-value">+15%</span>
+                            </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Latest Ideas Section -->
+            <section class="latest-ideas-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title">최신 아이디어</h2>
+                        <p class="section-subtitle">방금 전에 등록된 신선한 아이디어들을 확인해보세요</p>
+                        <a href="#" class="section-link">
+                            <span class="link-text">모든 아이디어 보기</span>
+                            <span class="link-icon">→</span>
+                        </a>
+                    </div>
+                    
+                    <div class="ideas-grid">
+                        <article class="idea-card">
+                            <div class="idea-header">
+                                <div class="idea-meta">
+                                    <span class="idea-author">
+                                        <span class="author-avatar">김</span>
+                                        <span class="author-name">김학습</span>
+                                    </span>
+                                    <span class="idea-date">
+                                        <span class="date-icon">🕒</span>
+                                        <span class="date-text">2시간 전</span>
+                                    </span>
+                                </div>
+                                <div class="idea-stats">
+                                    <span class="stat-item">
+                                        <span class="stat-icon">👀</span>
+                                        <span class="stat-count">156</span>
+                                    </span>
+                                    <span class="stat-item">
+                                        <span class="stat-icon">💬</span>
+                                        <span class="stat-count">23</span>
+                                    </span>
+                                    <span class="stat-item">
+                                        <span class="stat-icon">🌱</span>
+                                        <span class="stat-count">7</span>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="idea-content">
+                                <h3 class="idea-title">
+                                    <a href="#" class="idea-link">AI 기반 개인 맞춤형 학습 플랫폼</a>
+                                </h3>
+                                <p class="idea-excerpt">
+                                    학습자의 수준과 성향을 분석하여 최적의 학습 경로를 제안하는 AI 플랫폼을 개발하고 싶습니다. 머신러닝을 활용해 개인별 학습 패턴을 분석하고, 적응형 콘텐츠를 제공하는 것이 목표입니다...
+                                </p>
+                            </div>
+                            
+                            <div class="idea-footer">
+                                <div class="idea-tags">
+                                    <span class="idea-tag">
+                                        <span class="tag-icon">🏷️</span>
+                                        <span class="tag-text">AI</span>
+                                    </span>
+                                    <span class="idea-tag">
+                                        <span class="tag-icon">🏷️</span>
+                                        <span class="tag-text">교육</span>
+                                    </span>
+                                    <span class="idea-tag">
+                                        <span class="tag-icon">🏷️</span>
+                                        <span class="tag-text">머신러닝</span>
+                                    </span>
+                                </div>
+                                
+                                <div class="idea-actions">
+                                    <a href="#" class="action-btn">
+                                        <span class="btn-icon">👀</span>
+                                        <span class="btn-text">자세히 보기</span>
+                                    </a>
+                                    <button class="action-btn fork-btn">
+                                        <span class="btn-icon">🌱</span>
+                                        <span class="btn-text">포크하기</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="idea-card">
+                            <div class="idea-header">
+                                <div class="idea-meta">
+                                    <span class="idea-author">
+                                        <span class="author-avatar">이</span>
+                                        <span class="author-name">이환경</span>
+                                    </span>
+                                    <span class="idea-date">
+                                        <span class="date-icon">🕒</span>
+                                        <span class="date-text">3시간 전</span>
+                                    </span>
+                                </div>
+                                <div class="idea-stats">
+                                    <span class="stat-item">
+                                        <span class="stat-icon">👀</span>
+                                        <span class="stat-count">89</span>
+                                    </span>
+                                    <span class="stat-item">
+                                        <span class="stat-icon">💬</span>
+                                        <span class="stat-count">15</span>
+                                    </span>
+                                    <span class="stat-item">
+                                        <span class="stat-icon">🌱</span>
+                                        <span class="stat-count">3</span>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="idea-content">
+                                <h3 class="idea-title">
+                                    <a href="#" class="idea-link">친환경 배달 포장재 자동 분류 시스템</a>
+                                </h3>
+                                <p class="idea-excerpt">
+                                    배달 음식 포장재를 자동으로 분류하고 재활용 가능한 재료로 분리하는 시스템을 만들고 싶습니다. 컴퓨터 비전과 로봇 기술을 활용하여 환경 친화적인 배달 서비스를 구현하는 것이 목표입니다...
+                                </p>
+                            </div>
+                            
+                            <div class="idea-footer">
+                                <div class="idea-tags">
+                                    <span class="idea-tag">
+                                        <span class="tag-icon">🏷️</span>
+                                        <span class="tag-text">환경</span>
+                                    </span>
+                                    <span class="idea-tag">
+                                        <span class="tag-icon">🏷️</span>
+                                        <span class="tag-text">로봇</span>
+                                    </span>
+                                    <span class="idea-tag">
+                                        <span class="tag-icon">🏷️</span>
+                                        <span class="tag-text">배달</span>
+                                    </span>
+                                </div>
+                                
+                                <div class="idea-actions">
+                                    <a href="#" class="action-btn">
+                                        <span class="btn-icon">👀</span>
+                                        <span class="btn-text">자세히 보기</span>
+                                    </a>
+                                    <button class="action-btn fork-btn">
+                                        <span class="btn-icon">🌱</span>
+                                        <span class="btn-text">포크하기</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="idea-card">
+                            <div class="idea-header">
+                                <div class="idea-meta">
+                                    <span class="idea-author">
+                                        <span class="author-avatar">박</span>
+                                        <span class="author-name">박협업</span>
+                                    </span>
+                                    <span class="idea-date">
+                                        <span class="date-icon">🕒</span>
+                                        <span class="date-text">4시간 전</span>
+                                    </span>
+                                </div>
+                                <div class="idea-stats">
+                                    <span class="stat-item">
+                                        <span class="stat-icon">👀</span>
+                                        <span class="stat-count">234</span>
+                                    </span>
+                                    <span class="stat-item">
+                                        <span class="stat-icon">💬</span>
+                                        <span class="stat-count">31</span>
+                                    </span>
+                                    <span class="stat-item">
+                                        <span class="stat-icon">🌱</span>
+                                        <span class="stat-count">12</span>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="idea-content">
+                                <h3 class="idea-title">
+                                    <a href="#" class="idea-link">실시간 협업 마인드맵 도구</a>
+                                </h3>
+                                <p class="idea-excerpt">
+                                    여러 사람이 동시에 편집할 수 있는 실시간 마인드맵 도구를 개발하고 싶습니다. WebSocket을 활용한 실시간 동기화와 직관적인 드래그 앤 드롭 인터페이스가 핵심 기능입니다...
+                                </p>
+                            </div>
+                            
+                            <div class="idea-footer">
+                                <div class="idea-tags">
+                                    <span class="idea-tag">
+                                        <span class="tag-icon">🏷️</span>
+                                        <span class="tag-text">협업</span>
+                                    </span>
+                                    <span class="idea-tag">
+                                        <span class="tag-icon">🏷️</span>
+                                        <span class="tag-text">마인드맵</span>
+                                    </span>
+                                    <span class="idea-tag">
+                                        <span class="tag-icon">🏷️</span>
+                                        <span class="tag-text">실시간</span>
+                                    </span>
+                                </div>
+                                
+                                <div class="idea-actions">
+                                    <a href="#" class="action-btn">
+                                        <span class="btn-icon">👀</span>
+                                        <span class="btn-text">자세히 보기</span>
+                                    </a>
+                                    <button class="action-btn fork-btn">
+                                        <span class="btn-icon">🌱</span>
+                                        <span class="btn-text">포크하기</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Categories Section -->
+            <section class="categories-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title">카테고리별 아이디어</h2>
+                        <p class="section-subtitle">관심 있는 분야의 아이디어를 쉽게 찾아보세요</p>
+                        <a href="#" class="section-link">
+                            <span class="link-text">모든 태그 보기</span>
+                            <span class="link-icon">→</span>
+                        </a>
+                    </div>
+                    
+                    <div class="categories-grid">
+                        <div class="category-card" style="--category-color: #3498db">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <span class="category-emoji">💻</span>
+                                </div>
+                                <div class="category-info">
+                                    <h3 class="category-name">기술</h3>
+                                    <p class="category-description">IT, 프로그래밍, 개발 관련 아이디어</p>
+                                </div>
+                            </div>
+                            
+                            <div class="category-stats">
+                                <div class="category-count">
+                                    <span class="count-number">456</span>
+                                    <span class="count-label">아이디어</span>
+                                </div>
+                                <div class="category-trend">
+                                    <span class="trend-icon">📈</span>
+                                    <span class="trend-text">활발</span>
+                                </div>
+                            </div>
+                            
+                            <div class="category-actions">
+                                <a href="#" class="category-link">
+                                    <span class="link-text">아이디어 보기</span>
+                                    <span class="link-icon">→</span>
+                                </a>
+                                <a href="#" class="category-action-btn">
+                                    <span class="btn-icon">✏️</span>
+                                    <span class="btn-text">작성하기</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="category-card" style="--category-color: #e74c3c">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <span class="category-emoji">🎨</span>
+                                </div>
+                                <div class="category-info">
+                                    <h3 class="category-name">디자인</h3>
+                                    <p class="category-description">UI/UX, 그래픽, 창작 관련 아이디어</p>
+                                </div>
+                            </div>
+                            
+                            <div class="category-stats">
+                                <div class="category-count">
+                                    <span class="count-number">234</span>
+                                    <span class="count-label">아이디어</span>
+                                </div>
+                                <div class="category-trend">
+                                    <span class="trend-icon">📈</span>
+                                    <span class="trend-text">활발</span>
+                                </div>
+                            </div>
+                            
+                            <div class="category-actions">
+                                <a href="#" class="category-link">
+                                    <span class="link-text">아이디어 보기</span>
+                                    <span class="link-icon">→</span>
+                                </a>
+                                <a href="#" class="category-action-btn">
+                                    <span class="btn-icon">✏️</span>
+                                    <span class="btn-text">작성하기</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="category-card" style="--category-color: #2ecc71">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <span class="category-emoji">💼</span>
+                                </div>
+                                <div class="category-info">
+                                    <h3 class="category-name">비즈니스</h3>
+                                    <p class="category-description">창업, 마케팅, 경영 관련 아이디어</p>
+                                </div>
+                            </div>
+                            
+                            <div class="category-stats">
+                                <div class="category-count">
+                                    <span class="count-number">189</span>
+                                    <span class="count-label">아이디어</span>
+                                </div>
+                                <div class="category-trend">
+                                    <span class="trend-icon">📈</span>
+                                    <span class="trend-text">활발</span>
+                                </div>
+                            </div>
+                            
+                            <div class="category-actions">
+                                <a href="#" class="category-link">
+                                    <span class="link-text">아이디어 보기</span>
+                                    <span class="link-icon">→</span>
+                                </a>
+                                <a href="#" class="category-action-btn">
+                                    <span class="btn-icon">✏️</span>
+                                    <span class="btn-text">작성하기</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="category-card" style="--category-color: #f39c12">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <span class="category-emoji">📚</span>
+                                </div>
+                                <div class="category-info">
+                                    <h3 class="category-name">교육</h3>
+                                    <p class="category-description">학습, 교육, 연구 관련 아이디어</p>
+                                </div>
+                            </div>
+                            
+                            <div class="category-stats">
+                                <div class="category-count">
+                                    <span class="count-number">167</span>
+                                    <span class="count-label">아이디어</span>
+                                </div>
+                                <div class="category-trend">
+                                    <span class="trend-icon">📈</span>
+                                    <span class="trend-text">활발</span>
+                                </div>
+                            </div>
+                            
+                            <div class="category-actions">
+                                <a href="#" class="category-link">
+                                    <span class="link-text">아이디어 보기</span>
+                                    <span class="link-icon">→</span>
+                                </a>
+                                <a href="#" class="category-action-btn">
+                                    <span class="btn-icon">✏️</span>
+                                    <span class="btn-text">작성하기</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- CTA Section -->
+            <section class="cta-section">
+                <div class="cta-background">
+                    <div class="cta-overlay"></div>
+                    <div class="cta-pattern">
+                        <div class="pattern-dot"></div>
+                        <div class="pattern-dot"></div>
+                        <div class="pattern-dot"></div>
+                        <div class="pattern-dot"></div>
+                        <div class="pattern-dot"></div>
+                        <div class="pattern-dot"></div>
+                    </div>
+                </div>
+                
+                <div class="container">
+                    <div class="cta-content">
+                        <div class="cta-text">
+                            <h2 class="cta-title">
+                                <span class="cta-title-main">지금 시작하세요!</span>
+                                <span class="cta-title-sub">여러분의 아이디어가 세상을 바꿀 수 있습니다</span>
+                            </h2>
+                            
+                            <p class="cta-description">
+                                아이디어 허브에서 창의적인 생각을 공유하고,<br>
+                                다른 사람들과 함께 아이디어를 발전시켜보세요.<br>
+                                <strong>집단지성의 힘</strong>으로 더 나은 세상을 만들어갑시다.
+                            </p>
+                            
+                            <div class="cta-features">
+                                <div class="cta-feature">
+                                    <span class="feature-icon">🚀</span>
+                                    <span class="feature-text">무료로 시작</span>
+                                </div>
+                                <div class="cta-feature">
+                                    <span class="feature-icon">👥</span>
+                                    <span class="feature-text">커뮤니티 참여</span>
+                                </div>
+                                <div class="cta-feature">
+                                    <span class="feature-icon">🌱</span>
+                                    <span class="feature-text">아이디어 발전</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="cta-actions">
+                            <div class="cta-guest">
+                                <h3 class="cta-subtitle">아이디어 허브에 참여하세요</h3>
+                                <p class="cta-subdescription">회원가입하고 창의적인 아이디어 여행을 시작해보세요.</p>
+                                
+                                <div class="cta-buttons">
+                                    <a href="#" class="btn btn-primary btn-large">
+                                        <span class="btn-icon">🚀</span>
+                                        <span class="btn-text">무료 회원가입</span>
+                                    </a>
+                                    <a href="#" class="btn btn-outline btn-large">
+                                        <span class="btn-icon">🔑</span>
+                                        <span class="btn-text">로그인</span>
+                                    </a>
+                                </div>
+                                
+                                <div class="cta-benefits">
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">✅</span>
+                                        <span class="benefit-text">무료로 모든 기능 이용</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">✅</span>
+                                        <span class="benefit-text">아이디어 공유 및 협업</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">✅</span>
+                                        <span class="benefit-text">마인드맵 실시간 편집</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Site Footer -->
+        <footer class="site-footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-info">
+                        <div class="footer-branding">
+                            <h3 class="footer-title">아이디어 허브</h3>
+                            <p class="footer-description">집단지성으로 아이디어를 발전시키는 오픈소스 아이디어 플랫폼</p>
+                        </div>
+                        
+                        <!-- Social Links -->
+                        <div class="footer-social">
+                            <h4 class="social-title">소셜 미디어</h4>
+                            <ul class="social-links">
+                                <li><a href="#" class="social-link" aria-label="GitHub">
+                                    <span class="social-icon">📱</span>
+                                    <span class="social-text">GitHub</span>
+                                </a></li>
+                                <li><a href="#" class="social-link" aria-label="Twitter">
+                                    <span class="social-icon">🐦</span>
+                                    <span class="social-text">Twitter</span>
+                                </a></li>
+                                <li><a href="#" class="social-link" aria-label="Discord">
+                                    <span class="social-icon">💬</span>
+                                    <span class="social-text">Discord</span>
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Footer Links -->
+                    <div class="footer-links">
+                        <div class="footer-section">
+                            <h4 class="footer-section-title">서비스</h4>
+                            <ul class="footer-link-list">
+                                <li><a href="#" class="footer-link">아이디어 게시판</a></li>
+                                <li><a href="#" class="footer-link">마인드맵</a></li>
+                                <li><a href="#" class="footer-link">태그</a></li>
+                                <li><a href="#" class="footer-link">검색</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-section">
+                            <h4 class="footer-section-title">지원</h4>
+                            <ul class="footer-link-list">
+                                <li><a href="#" class="footer-link">자주 묻는 질문</a></li>
+                                <li><a href="#" class="footer-link">사용 가이드</a></li>
+                                <li><a href="#" class="footer-link">문의하기</a></li>
+                                <li><a href="#" class="footer-link">신고하기</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-section">
+                            <h4 class="footer-section-title">정책</h4>
+                            <ul class="footer-link-list">
+                                <li><a href="#" class="footer-link">개인정보처리방침</a></li>
+                                <li><a href="#" class="footer-link">이용약관</a></li>
+                                <li><a href="#" class="footer-link">라이선스</a></li>
+                                <li><a href="#" class="footer-link">저작권</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Footer Bottom -->
+                <div class="footer-bottom">
+                    <div class="footer-bottom-content">
+                        <div class="footer-copyright">
+                            <p>&copy; 2024 아이디어 허브. All rights reserved.</p>
+                            <p class="footer-version">Version 1.0.0</p>
+                        </div>
+                        
+                        <div class="footer-stats">
+                            <span class="stat-item">
+                                <span class="stat-number">1,250</span>
+                                <span class="stat-label">아이디어</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-number">340</span>
+                                <span class="stat-label">사용자</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-number">89</span>
+                                <span class="stat-label">마인드맵</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        
+        <!-- Back to Top Button -->
+        <button id="back-to-top" class="back-to-top" aria-label="맨 위로 이동" style="display: none;">
+            <span class="back-to-top-icon">↑</span>
+        </button>
+    </div>
+    
+    <!-- JavaScript Files -->
+    <script src="assets/js/common/main.js"></script>
+    <script src="assets/js/common/api.js"></script>
+    <script src="assets/js/common/utils.js"></script>
+</body>
+</html>

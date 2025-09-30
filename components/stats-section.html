@@ -1,0 +1,111 @@
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-header">
+            <h2 class="stats-title">아이디어 허브 현황</h2>
+            <p class="stats-subtitle">함께 만들어가는 창의적인 아이디어 생태계</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <span class="stat-emoji">💡</span>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" data-target="<?php echo isset($stats['total_ideas']) ? $stats['total_ideas'] : 0; ?>">
+                        0
+                    </div>
+                    <div class="stat-label">총 아이디어</div>
+                    <div class="stat-description">사용자들이 공유한 아이디어 수</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <span class="stat-emoji">👥</span>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" data-target="<?php echo isset($stats['total_users']) ? $stats['total_users'] : 0; ?>">
+                        0
+                    </div>
+                    <div class="stat-label">활성 사용자</div>
+                    <div class="stat-description">아이디어에 참여하는 사용자 수</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <span class="stat-emoji">🧠</span>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" data-target="<?php echo isset($stats['total_mindmaps']) ? $stats['total_mindmaps'] : 0; ?>">
+                        0
+                    </div>
+                    <div class="stat-label">마인드맵</div>
+                    <div class="stat-description">협업으로 만들어진 마인드맵 수</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <span class="stat-emoji">💬</span>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" data-target="<?php echo isset($stats['total_comments']) ? $stats['total_comments'] : 0; ?>">
+                        0
+                    </div>
+                    <div class="stat-label">댓글</div>
+                    <div class="stat-description">아이디어에 달린 댓글 수</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <span class="stat-emoji">🌱</span>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" data-target="<?php echo isset($stats['total_forks']) ? $stats['total_forks'] : 0; ?>">
+                        0
+                    </div>
+                    <div class="stat-label">포크</div>
+                    <div class="stat-description">발전된 아이디어 포크 수</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <span class="stat-emoji">🏷️</span>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" data-target="<?php echo isset($stats['total_tags']) ? $stats['total_tags'] : 0; ?>">
+                        0
+                    </div>
+                    <div class="stat-label">태그</div>
+                    <div class="stat-description">아이디어 분류 태그 수</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Additional Stats Info -->
+        <div class="stats-info">
+            <div class="stats-highlight">
+                <div class="highlight-item">
+                    <span class="highlight-number"><?php echo isset($stats['ideas_today']) ? $stats['ideas_today'] : 0; ?></span>
+                    <span class="highlight-label">오늘 새로 등록된 아이디어</span>
+                </div>
+                <div class="highlight-item">
+                    <span class="highlight-number"><?php echo isset($stats['active_users_today']) ? $stats['active_users_today'] : 0; ?></span>
+                    <span class="highlight-label">오늘 활성 사용자</span>
+                </div>
+            </div>
+            
+            <div class="stats-trend">
+                <div class="trend-item trend-up">
+                    <span class="trend-icon">📈</span>
+                    <span class="trend-text">지난 주 대비 아이디어 증가율</span>
+                    <span class="trend-value">+<?php echo isset($stats['growth_rate']) ? $stats['growth_rate'] : 0; ?>%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

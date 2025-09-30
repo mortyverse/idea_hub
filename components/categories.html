@@ -4,7 +4,7 @@
         <div class="section-header">
             <h2 class="section-title">카테고리별 아이디어</h2>
             <p class="section-subtitle">관심 있는 분야의 아이디어를 쉽게 찾아보세요</p>
-            <a href="<?php echo SITE_URL; ?>/pages/tags/list.html" class="section-link">
+            <a href="/pages/tags/list.html" class="section-link">
                 <span class="link-text">모든 태그 보기</span>
                 <span class="link-icon">→</span>
             </a>
@@ -100,12 +100,12 @@
                         <span class="link-text">아이디어 보기</span>
                         <span class="link-icon">→</span>
                     </a>
-                    <?php if (isLoggedIn()): ?>
-                    <a href="<?php echo SITE_URL; ?>/pages/ideas/create.html?category=<?php echo urlencode($category['name']); ?>" class="category-action-btn">
-                        <span class="btn-icon">✏️</span>
-                        <span class="btn-text">작성하기</span>
-                    </a>
-                    <?php endif; ?>
+                    <div data-auth-required>
+                        <a href="/pages/ideas/create.html?category=기술" class="category-action-btn">
+                            <span class="btn-icon">✏️</span>
+                            <span class="btn-text">작성하기</span>
+                        </a>
+                    </div>
                 </div>
                 
                 <!-- Category Preview -->

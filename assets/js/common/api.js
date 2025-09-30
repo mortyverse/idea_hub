@@ -368,6 +368,27 @@ const UserAPI = {
  */
 const AuthAPI = {
     /**
+     * 로그인 상태 확인
+     */
+    async checkAuthStatus() {
+        return api.get('/api/index.php?endpoint=auth-status');
+    },
+    
+    /**
+     * 사용자 정보 가져오기
+     */
+    async getUserInfo() {
+        return api.get('/api/index.php?endpoint=user-info');
+    },
+    
+    /**
+     * 사이트 설정 가져오기
+     */
+    async getSiteConfig() {
+        return api.get('/api/index.php?endpoint=site-config');
+    },
+    
+    /**
      * 로그인
      */
     async login(credentials) {
@@ -494,6 +515,82 @@ const APIErrorHandler = {
     }
 };
 
+/**
+ * 유틸리티 함수들
+ */
+const Utils = {
+    /**
+     * HTML 이스케이프
+     */
+    escapeHtml(string) {
+        const div = document.createElement('div');
+        div.textContent = string;
+        return div.innerHTML;
+    },
+    
+    /**
+     * 상대적 시간 표시
+     */
+    getRelativeTime(datetime) {
+        const now = new Date();
+        const date = new Date(datetime);
+        const diff = now - date;
+        
+        const seconds = Math.floor(diff / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        const months = Math.floor(days / 30);
+        const years = Math.floor(months / 12);
+        
+        if (seconds < 60) return '방금 전';
+        if (minutes < 60) return `${minutes}분 전`;
+        if (hours < 24) return `${hours}시간 전`;
+        if (days < 30) return `${days}일 전`;
+        if (months < 12) return `${months}개월 전`;
+        return `${years}년 전`;
+    },
+    
+    /**
+     * 인증 상태 기반 UI 업데이트
+     */
+    async updateAuthUI() {
+        try {
+            const authData = await AuthAPI.checkAuthStatus();
+            const isLoggedIn = authData.isLoggedIn;
+            
+            // 인증이 필요한 요소들 표시/숨김
+            const authElements = document.querySelectorAll('[data-auth-required]');
+            const guestElements = document.querySelectorAll('[data-guest-only]');
+            
+            authElements.forEach(element => {
+                element.style.display = isLoggedIn ? 'block' : 'none';
+            });
+            
+            guestElements.forEach(element => {
+                element.style.display = isLoggedIn ? 'none' : 'block';
+            });
+            
+            // 로그인/로그아웃 버튼 업데이트
+            const loginButtons = document.querySelectorAll('[data-action="login"]');
+            const logoutButtons = document.querySelectorAll('[data-action="logout"]');
+            
+            loginButtons.forEach(button => {
+                button.style.display = isLoggedIn ? 'none' : 'block';
+            });
+            
+            logoutButtons.forEach(button => {
+                button.style.display = isLoggedIn ? 'block' : 'none';
+            });
+            
+            return authData;
+        } catch (error) {
+            console.error('Failed to update auth UI:', error);
+            return { isLoggedIn: false };
+        }
+    }
+};
+
 // 전역으로 API 객체들 내보내기
 window.API = {
     client: api,
@@ -505,8 +602,22 @@ window.API = {
     user: UserAPI,
     auth: AuthAPI,
     stats: StatsAPI,
-    errorHandler: APIErrorHandler
+    errorHandler: APIErrorHandler,
+    utils: Utils
 };
+
+// 전역 유틸리티 함수들
+window.e = Utils.escapeHtml;
+window.getRelativeTime = Utils.getRelativeTime;
+
+// 페이지 로드 시 인증 상태 확인
+document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        await Utils.updateAuthUI();
+    } catch (error) {
+        console.error('Failed to initialize auth state:', error);
+    }
+});
 
 // CSS 애니메이션 추가
 const style = document.createElement('style');

@@ -34,25 +34,29 @@
                 </div>
                 
                 <div class="hero-actions">
-                    <?php if (isLoggedIn()): ?>
-                        <a href="<?php echo SITE_URL; ?>/pages/ideas/create.html" class="btn btn-primary btn-large">
+                    <!-- 로그인한 사용자용 버튼 -->
+                    <div data-auth-required>
+                        <a href="/pages/ideas/create.html" class="btn btn-primary btn-large">
                             <span class="btn-icon">✏️</span>
                             <span class="btn-text">아이디어 작성하기</span>
                         </a>
-                        <a href="<?php echo SITE_URL; ?>/pages/ideas/list.html" class="btn btn-outline btn-large">
+                        <a href="/pages/ideas/list.html" class="btn btn-outline btn-large">
                             <span class="btn-icon">👀</span>
                             <span class="btn-text">아이디어 둘러보기</span>
                         </a>
-                    <?php else: ?>
-                        <a href="<?php echo SITE_URL; ?>/pages/auth/register.html" class="btn btn-primary btn-large">
+                    </div>
+                    
+                    <!-- 비로그인 사용자용 버튼 -->
+                    <div data-guest-only>
+                        <a href="/pages/auth/register.html" class="btn btn-primary btn-large">
                             <span class="btn-icon">🚀</span>
                             <span class="btn-text">지금 시작하기</span>
                         </a>
-                        <a href="<?php echo SITE_URL; ?>/pages/ideas/list.html" class="btn btn-outline btn-large">
+                        <a href="/pages/ideas/list.html" class="btn btn-outline btn-large">
                             <span class="btn-icon">👀</span>
                             <span class="btn-text">둘러보기</span>
                         </a>
-                    <?php endif; ?>
+                    </div>
                 </div>
             </div>
             

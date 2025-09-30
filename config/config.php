@@ -70,8 +70,12 @@ ini_set('session.cookie_secure', 0); // Set to 1 for HTTPS
 // 데이터베이스 설정 포함
 require_once ROOT_PATH . '/config/database.php';
 
-// Utility functions
-// 유틸리티 함수들
+// Include essential functions
+// 필수 함수들 포함
+require_once ROOT_PATH . '/includes/functions.php';
+
+// Additional utility functions
+// 추가 유틸리티 함수들
 
 /**
  * Generate CSRF token
@@ -106,20 +110,5 @@ function sanitizeInput($input) {
  */
 function formatDate($date, $format = 'Y-m-d H:i:s') {
     return date($format, strtotime($date));
-}
-
-/**
- * Get relative time
- * 상대적 시간 표시
- */
-function getRelativeTime($datetime) {
-    $time = time() - strtotime($datetime);
-    
-    if ($time < 60) return '방금 전';
-    if ($time < 3600) return floor($time/60) . '분 전';
-    if ($time < 86400) return floor($time/3600) . '시간 전';
-    if ($time < 2592000) return floor($time/86400) . '일 전';
-    if ($time < 31536000) return floor($time/2592000) . '개월 전';
-    return floor($time/31536000) . '년 전';
 }
 ?>

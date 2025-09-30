@@ -43,67 +43,65 @@
             </div>
             
             <div class="cta-actions">
-                <?php if (isLoggedIn()): ?>
-                    <!-- Logged in user CTA -->
-                    <div class="cta-logged-in">
-                        <h3 class="cta-subtitle">이미 회원이시군요!</h3>
-                        <p class="cta-subdescription">새로운 아이디어를 작성하거나 다른 사람의 아이디어에 참여해보세요.</p>
-                        
-                        <div class="cta-buttons">
-                            <a href="<?php echo SITE_URL; ?>/pages/ideas/create.html" class="btn btn-primary btn-large">
-                                <span class="btn-icon">✏️</span>
-                                <span class="btn-text">아이디어 작성하기</span>
-                            </a>
-                            <a href="<?php echo SITE_URL; ?>/pages/mindmap/editor.html" class="btn btn-outline btn-large">
-                                <span class="btn-icon">🧠</span>
-                                <span class="btn-text">마인드맵 만들기</span>
-                            </a>
+                <!-- 로그인한 사용자용 CTA -->
+                <div data-auth-required class="cta-logged-in">
+                    <h3 class="cta-subtitle">이미 회원이시군요!</h3>
+                    <p class="cta-subdescription">새로운 아이디어를 작성하거나 다른 사람의 아이디어에 참여해보세요.</p>
+                    
+                    <div class="cta-buttons">
+                        <a href="/pages/ideas/create.html" class="btn btn-primary btn-large">
+                            <span class="btn-icon">✏️</span>
+                            <span class="btn-text">아이디어 작성하기</span>
+                        </a>
+                        <a href="/pages/mindmap/editor.html" class="btn btn-outline btn-large">
+                            <span class="btn-icon">🧠</span>
+                            <span class="btn-text">마인드맵 만들기</span>
+                        </a>
+                    </div>
+                    
+                    <div class="cta-quick-links">
+                        <a href="/pages/ideas/list.html" class="quick-link">
+                            <span class="link-icon">💡</span>
+                            <span class="link-text">아이디어 둘러보기</span>
+                        </a>
+                        <a href="/pages/profile/user.html" class="quick-link">
+                            <span class="link-icon">👤</span>
+                            <span class="link-text">내 프로필</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 비로그인 사용자용 CTA -->
+                <div data-guest-only class="cta-guest">
+                    <h3 class="cta-subtitle">아이디어 허브에 참여하세요</h3>
+                    <p class="cta-subdescription">회원가입하고 창의적인 아이디어 여행을 시작해보세요.</p>
+                    
+                    <div class="cta-buttons">
+                        <a href="/pages/auth/register.html" class="btn btn-primary btn-large">
+                            <span class="btn-icon">🚀</span>
+                            <span class="btn-text">무료 회원가입</span>
+                        </a>
+                        <a href="/pages/auth/login.html" class="btn btn-outline btn-large">
+                            <span class="btn-icon">🔑</span>
+                            <span class="btn-text">로그인</span>
+                        </a>
+                    </div>
+                    
+                    <div class="cta-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✅</span>
+                            <span class="benefit-text">무료로 모든 기능 이용</span>
                         </div>
-                        
-                        <div class="cta-quick-links">
-                            <a href="<?php echo SITE_URL; ?>/pages/ideas/list.html" class="quick-link">
-                                <span class="link-icon">💡</span>
-                                <span class="link-text">아이디어 둘러보기</span>
-                            </a>
-                            <a href="<?php echo SITE_URL; ?>/pages/profile/user.html" class="quick-link">
-                                <span class="link-icon">👤</span>
-                                <span class="link-text">내 프로필</span>
-                            </a>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✅</span>
+                            <span class="benefit-text">아이디어 공유 및 협업</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✅</span>
+                            <span class="benefit-text">마인드맵 실시간 편집</span>
                         </div>
                     </div>
-                <?php else: ?>
-                    <!-- Guest user CTA -->
-                    <div class="cta-guest">
-                        <h3 class="cta-subtitle">아이디어 허브에 참여하세요</h3>
-                        <p class="cta-subdescription">회원가입하고 창의적인 아이디어 여행을 시작해보세요.</p>
-                        
-                        <div class="cta-buttons">
-                            <a href="<?php echo SITE_URL; ?>/pages/auth/register.html" class="btn btn-primary btn-large">
-                                <span class="btn-icon">🚀</span>
-                                <span class="btn-text">무료 회원가입</span>
-                            </a>
-                            <a href="<?php echo SITE_URL; ?>/pages/auth/login.html" class="btn btn-outline btn-large">
-                                <span class="btn-icon">🔑</span>
-                                <span class="btn-text">로그인</span>
-                            </a>
-                        </div>
-                        
-                        <div class="cta-benefits">
-                            <div class="benefit-item">
-                                <span class="benefit-icon">✅</span>
-                                <span class="benefit-text">무료로 모든 기능 이용</span>
-                            </div>
-                            <div class="benefit-item">
-                                <span class="benefit-icon">✅</span>
-                                <span class="benefit-text">아이디어 공유 및 협업</span>
-                            </div>
-                            <div class="benefit-item">
-                                <span class="benefit-icon">✅</span>
-                                <span class="benefit-text">마인드맵 실시간 편집</span>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
+                </div>
             </div>
         </div>
         
@@ -111,15 +109,15 @@
         <div class="social-proof">
             <div class="proof-stats">
                 <div class="proof-stat">
-                    <span class="proof-number"><?php echo isset($stats['total_users']) ? number_format($stats['total_users']) : '0'; ?>+</span>
+                    <span class="proof-number" data-stat="total_users">0</span>
                     <span class="proof-label">활성 사용자</span>
                 </div>
                 <div class="proof-stat">
-                    <span class="proof-number"><?php echo isset($stats['total_ideas']) ? number_format($stats['total_ideas']) : '0'; ?>+</span>
+                    <span class="proof-number" data-stat="total_ideas">0</span>
                     <span class="proof-label">공유된 아이디어</span>
                 </div>
                 <div class="proof-stat">
-                    <span class="proof-number"><?php echo isset($stats['total_mindmaps']) ? number_format($stats['total_mindmaps']) : '0'; ?>+</span>
+                    <span class="proof-number" data-stat="total_mindmaps">0</span>
                     <span class="proof-label">협업 마인드맵</span>
                 </div>
             </div>

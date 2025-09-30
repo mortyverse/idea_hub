@@ -42,8 +42,8 @@ define('CSRF_TOKEN_NAME', 'csrf_token');
 define('PASSWORD_MIN_LENGTH', 8);
 
 // Debug settings
-// 디버그 설정
-define('DEBUG_MODE', true);
+// 디버그 설정 - 프로덕션 환경에서는 false로 설정 필수!
+define('DEBUG_MODE', false); // 보안상 프로덕션에서는 false로 설정
 define('LOG_ERRORS', true);
 
 // Timezone

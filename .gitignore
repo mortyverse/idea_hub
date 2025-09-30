@@ -1,0 +1,31 @@
+# 환경 설정 파일 (보안상 중요)
+config/database.php
+config/config.php
+
+# 업로드된 파일들
+uploads/
+
+# 로그 파일들
+*.log
+logs/
+
+# 임시 파일들
+*.tmp
+*.temp
+
+# IDE 설정 파일들
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS 생성 파일들
+.DS_Store
+Thumbs.db
+
+# PHP 세션 파일들
+sessions/
+
+# 백업 파일들
+*.bak
+*.backup

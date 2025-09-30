@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="아이디어 허브 - 테스트 페이지">
+    <meta name="keywords" content="아이디어, 창의, 협업, 마인드맵, 집단지성">
+    <meta name="author" content="아이디어 허브">
+    
+    <title>아이디어 허브 - 테스트 페이지</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💡</text></svg>">
+    
+    <!-- Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="assets/css/common/main.css">
+    <link rel="stylesheet" href="assets/css/common/components.css">
+    <link rel="stylesheet" href="assets/css/common/responsive.css">
+</head>
+<body class="test-page">
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">메인 콘텐츠로 건너뛰기</a>
+    
+    <!-- Loading indicator -->
+    <div id="loading-indicator" class="loading-indicator" style="display: none;">
+        <div class="loading-spinner"></div>
+        <span>로딩 중...</span>
+    </div>
+    
+    <!-- Main container -->
+    <div class="main-container">
+        <!-- Header will be loaded by component-loader.js -->
+        
+        <!-- Main Content Wrapper -->
+        <main id="main-content" class="main-content">
+            <!-- Test Section -->
+            <section class="test-section">
+                <div class="container">
+                    <div class="test-content">
+                        <h1 class="test-title">컴포넌트 시스템 테스트</h1>
+                        <p class="test-description">
+                            이 페이지는 JavaScript 기반 컴포넌트 시스템이 정상적으로 작동하는지 테스트하기 위한 페이지입니다.
+                        </p>
+                        
+                        <div class="test-features">
+                            <div class="test-feature">
+                                <span class="feature-icon">✅</span>
+                                <span class="feature-text">헤더 컴포넌트 로드</span>
+                            </div>
+                            <div class="test-feature">
+                                <span class="feature-icon">✅</span>
+                                <span class="feature-text">푸터 컴포넌트 로드</span>
+                            </div>
+                            <div class="test-feature">
+                                <span class="feature-icon">✅</span>
+                                <span class="feature-text">JavaScript 기능 동작</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-actions">
+                            <a href="index.html" class="btn btn-primary">
+                                <span class="btn-icon">🏠</span>
+                                <span class="btn-text">메인 페이지로</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Footer will be loaded by component-loader.js -->
+    </div>
+    
+    <!-- JavaScript Files -->
+    <script src="assets/js/common/component-loader.js"></script>
+    <script src="assets/js/common/main.js"></script>
+    <script src="assets/js/common/api.js"></script>
+    <script src="assets/js/common/utils.js"></script>
+    <script src="assets/js/common/stats.js"></script>
+</body>
+</html>

@@ -2,19 +2,26 @@
  * Main JavaScript - 아이디어 허브 메인 스크립트
  */
 
-// DOM이 로드된 후 실행
-document.addEventListener('DOMContentLoaded', function() {
+// 페이지 초기화 함수 (컴포넌트 로드 후 호출됨)
+function initializePage() {
     console.log('아이디어 허브가 로드되었습니다.');
     
     // 초기화 함수들 실행
     initializeNavigation();
     initializeStats();
     initializeScrollEffects();
-    initializeBackToTop();
     initializeLoadingIndicator();
     initializeUserMenu();
-    initializeMobileMenu();
     initializeAnimations();
+    initializeForkButtons();
+    initializeLoadMoreButtons();
+    initializeSearch();
+}
+
+// DOM이 로드된 후 실행 (컴포넌트 로더와 함께 사용)
+document.addEventListener('DOMContentLoaded', function() {
+    // 컴포넌트 로더가 페이지를 초기화할 때까지 대기
+    // initializePage는 component-loader.js에서 호출됨
 });
 
 /**
@@ -103,31 +110,7 @@ function initializeScrollEffects() {
     });
 }
 
-/**
- * 백투탑 버튼 초기화
- */
-function initializeBackToTop() {
-    const backToTopBtn = document.getElementById('back-to-top');
-    
-    if (!backToTopBtn) return;
-    
-    // 스크롤 시 버튼 표시/숨김
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 300) {
-            backToTopBtn.style.display = 'block';
-        } else {
-            backToTopBtn.style.display = 'none';
-        }
-    });
-    
-    // 클릭 시 맨 위로 스크롤
-    backToTopBtn.addEventListener('click', function() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
-}
+// 백투탑 버튼 초기화는 component-loader.js의 initializeFooter()에서 처리됨
 
 /**
  * 로딩 인디케이터 초기화
@@ -182,56 +165,7 @@ function initializeUserMenu() {
     });
 }
 
-/**
- * 모바일 메뉴 초기화
- */
-function initializeMobileMenu() {
-    const mobileToggle = document.querySelector('.mobile-menu-toggle');
-    const navMenu = document.querySelector('.nav-menu');
-    const mobileOverlay = document.querySelector('.mobile-nav-overlay');
-    
-    if (!mobileToggle || !navMenu) return;
-    
-    // 햄버거 메뉴 토글
-    mobileToggle.addEventListener('click', function() {
-        const isActive = mobileToggle.classList.contains('active');
-        
-        mobileToggle.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        
-        if (mobileOverlay) {
-            mobileOverlay.style.display = isActive ? 'none' : 'block';
-        }
-        
-        // 스크롤 방지
-        document.body.style.overflow = isActive ? 'auto' : 'hidden';
-    });
-    
-    // 오버레이 클릭 시 메뉴 닫기
-    if (mobileOverlay) {
-        mobileOverlay.addEventListener('click', function() {
-            mobileToggle.classList.remove('active');
-            navMenu.classList.remove('active');
-            mobileOverlay.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-    }
-    
-    // 네비게이션 링크 클릭 시 메뉴 닫기 (모바일)
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            if (window.innerWidth <= 991) {
-                mobileToggle.classList.remove('active');
-                navMenu.classList.remove('active');
-                if (mobileOverlay) {
-                    mobileOverlay.style.display = 'none';
-                }
-                document.body.style.overflow = 'auto';
-            }
-        });
-    });
-}
+// 모바일 메뉴 초기화는 component-loader.js의 initializeHeader()에서 처리됨
 
 /**
  * 애니메이션 초기화

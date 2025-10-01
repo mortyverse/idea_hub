@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이디어 상세 - 아이디어 허브</title>
+    <meta name="description" content="아이디어의 상세 내용을 확인하고 댓글을 통해 토론에 참여하세요.">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../../assets/css/common/main.css">
+    <link rel="stylesheet" href="../../assets/css/common/components.css">
+    <link rel="stylesheet" href="../../assets/css/common/responsive.css">
+    <link rel="stylesheet" href="../../assets/css/ideas/detail.css">
+    
+    <!-- Web Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="../../assets/images/icons/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Main container for component loading -->
+    <div class="main-container">
+        <!-- Header Component -->
+        <div id="header-container"></div>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+        <div class="container">
+            <!-- Loading State -->
+            <div id="loading-state" class="loading-state">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                </div>
+                <p class="loading-text">로딩 중...</p>
+            </div>
+            
+            <!-- Error State -->
+            <div id="error-state" class="error-state" style="display: none;">
+                <div class="error-icon">⚠️</div>
+                <h3 class="error-title">아이디어를 찾을 수 없습니다</h3>
+                <p class="error-description">
+                    요청하신 아이디어가 존재하지 않거나 삭제되었습니다.<br>
+                    아이디어 목록으로 돌아가서 다른 아이디어를 확인해보세요.
+                </p>
+                <div class="error-actions">
+                    <a href="list.html" class="btn btn-primary">
+                        <span class="btn-icon">📋</span>
+                        <span class="btn-text">아이디어 목록</span>
+                    </a>
+                    <a href="create.html" class="btn btn-outline">
+                        <span class="btn-icon">➕</span>
+                        <span class="btn-text">새 아이디어 작성</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Idea Detail Content -->
+            <div id="idea-detail-content" class="idea-detail-content" style="display: none;">
+                <!-- Breadcrumb -->
+                <nav class="breadcrumb" aria-label="페이지 경로">
+                    <ol class="breadcrumb-list">
+                        <li class="breadcrumb-item">
+                            <a href="../../index.html" class="breadcrumb-link">홈</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="list.html" class="breadcrumb-link">아이디어 목록</a>
+                        </li>
+                        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+                            아이디어 상세
+                        </li>
+                    </ol>
+                </nav>
+                
+                <!-- Idea Header -->
+                <header class="idea-header">
+                    <div class="idea-header-content">
+                        <h1 class="idea-title" id="idea-title">아이디어 제목</h1>
+                        
+                        <div class="idea-meta">
+                            <div class="meta-item">
+                                <span class="meta-icon">👤</span>
+                                <span class="meta-label">작성자</span>
+                                <span class="meta-value" id="idea-writer">작성자명</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-icon">🕒</span>
+                                <span class="meta-label">작성일</span>
+                                <span class="meta-value" id="idea-date">날짜</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-icon">👀</span>
+                                <span class="meta-label">조회수</span>
+                                <span class="meta-value" id="idea-view-count">0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="idea-tags" id="idea-tags">
+                            <!-- Tags will be loaded dynamically -->
+                        </div>
+                    </div>
+                    
+                    <div class="idea-actions">
+                        <button type="button" id="fork-btn" class="btn btn-outline">
+                            <span class="btn-icon">🍴</span>
+                            <span class="btn-text">포크</span>
+                        </button>
+                        <button type="button" id="share-btn" class="btn btn-outline">
+                            <span class="btn-icon">📤</span>
+                            <span class="btn-text">공유</span>
+                        </button>
+                        <button type="button" id="bookmark-btn" class="btn btn-outline">
+                            <span class="btn-icon">🔖</span>
+                            <span class="btn-text">북마크</span>
+                        </button>
+                    </div>
+                </header>
+                
+                <!-- Idea Content -->
+                <article class="idea-content">
+                    <div class="idea-content-body">
+                        <div class="content-text" id="idea-content">
+                            <!-- Content will be loaded dynamically -->
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Idea Stats -->
+                <div class="idea-stats">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-icon">👀</span>
+                            <span class="stat-label">조회수</span>
+                            <span class="stat-value" id="stat-view-count">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">🍴</span>
+                            <span class="stat-label">포크</span>
+                            <span class="stat-value" id="stat-fork-count">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">💬</span>
+                            <span class="stat-label">댓글</span>
+                            <span class="stat-value" id="stat-comment-count">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Comments Section -->
+                <section class="comments-section">
+                    <div class="comments-header">
+                        <h2 class="comments-title">
+                            <span class="comments-icon">💬</span>
+                            <span class="comments-text">댓글</span>
+                            <span class="comments-count" id="comments-count">(0)</span>
+                        </h2>
+                    </div>
+                    
+                    <!-- Comment Form -->
+                    <div class="comment-form-container">
+                        <form id="comment-form" class="comment-form">
+                            <div class="comment-form-header">
+                                <h3 class="comment-form-title">댓글 작성</h3>
+                            </div>
+                            
+                            <div class="comment-form-body">
+                                <div class="form-field">
+                                    <label for="comment-writer" class="form-label">
+                                        <span class="form-label-text">작성자</span>
+                                        <span class="form-label-required">*</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="comment-writer" 
+                                        name="writer" 
+                                        class="form-input" 
+                                        placeholder="작성자명을 입력하세요"
+                                        maxlength="50"
+                                        required
+                                    >
+                                </div>
+                                
+                                <div class="form-field">
+                                    <label for="comment-content" class="form-label">
+                                        <span class="form-label-text">댓글 내용</span>
+                                        <span class="form-label-required">*</span>
+                                    </label>
+                                    <textarea 
+                                        id="comment-content" 
+                                        name="content" 
+                                        class="form-textarea" 
+                                        placeholder="댓글을 입력하세요..."
+                                        rows="4"
+                                        maxlength="1000"
+                                        required
+                                    ></textarea>
+                                    <div class="form-counter">
+                                        <span class="counter-current">0</span> / <span class="counter-max">1,000</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" id="comment-submit-btn" class="btn btn-primary">
+                                        <span class="btn-icon">💬</span>
+                                        <span class="btn-text">댓글 등록</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Comments List -->
+                    <div class="comments-list" id="comments-list">
+                        <!-- Comments will be loaded dynamically -->
+                    </div>
+                    
+                    <!-- Empty Comments State -->
+                    <div id="empty-comments" class="empty-comments" style="display: none;">
+                        <div class="empty-icon">💬</div>
+                        <h3 class="empty-title">첫 번째 댓글을 작성해보세요!</h3>
+                        <p class="empty-description">
+                            이 아이디어에 대한 의견이나 피드백을 남겨주세요.
+                        </p>
+                    </div>
+                </section>
+                
+                <!-- Related Ideas -->
+                <section class="related-ideas-section" id="related-ideas-section" style="display: none;">
+                    <div class="related-ideas-header">
+                        <h2 class="related-ideas-title">
+                            <span class="related-icon">🔗</span>
+                            <span class="related-text">관련 아이디어</span>
+                        </h2>
+                        <p class="related-description">
+                            같은 태그를 가진 다른 아이디어들을 확인해보세요.
+                        </p>
+                    </div>
+                    
+                    <div class="related-ideas-grid" id="related-ideas-grid">
+                        <!-- Related ideas will be loaded dynamically -->
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer Component -->
+    <div id="footer-container"></div>
+    
+    <!-- Comment Template -->
+    <template id="comment-template">
+        <article class="comment" data-comment-id="">
+            <div class="comment-header">
+                <div class="comment-meta">
+                    <span class="comment-writer"></span>
+                    <span class="comment-date"></span>
+                </div>
+            </div>
+            
+            <div class="comment-body">
+                <p class="comment-content"></p>
+            </div>
+            
+            <div class="comment-footer">
+                <div class="comment-actions">
+                    <button type="button" class="comment-action-btn">
+                        <span class="action-icon">👍</span>
+                        <span class="action-text">좋아요</span>
+                    </button>
+                    <button type="button" class="comment-action-btn">
+                        <span class="action-icon">💬</span>
+                        <span class="action-text">답글</span>
+                    </button>
+                </div>
+            </div>
+        </article>
+    </template>
+    
+    <!-- Related Idea Template -->
+    <template id="related-idea-template">
+        <article class="related-idea-card">
+            <div class="related-idea-header">
+                <h3 class="related-idea-title">
+                    <a href="detail.html?id=" class="related-idea-link"></a>
+                </h3>
+                <div class="related-idea-meta">
+                    <span class="related-writer"></span>
+                    <span class="related-date"></span>
+                </div>
+            </div>
+            
+            <div class="related-idea-footer">
+                <div class="related-idea-stats">
+                    <span class="related-stat">
+                        <span class="related-stat-icon">👀</span>
+                        <span class="related-stat-count"></span>
+                    </span>
+                    <span class="related-stat">
+                        <span class="related-stat-icon">🍴</span>
+                        <span class="related-stat-count"></span>
+                    </span>
+                    <span class="related-stat">
+                        <span class="related-stat-icon">💬</span>
+                        <span class="related-stat-count"></span>
+                    </span>
+                </div>
+            </div>
+        </article>
+    </template>
+    
+    <!-- Share Modal -->
+    <div id="share-modal" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">아이디어 공유</h3>
+                <button type="button" class="modal-close" aria-label="모달 닫기">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="share-options">
+                    <div class="share-option">
+                        <label for="share-url" class="share-label">링크 복사</label>
+                        <div class="share-input-container">
+                            <input type="text" id="share-url" class="share-input" readonly>
+                            <button type="button" id="copy-url-btn" class="btn btn-outline">
+                                <span class="btn-icon">📋</span>
+                                <span class="btn-text">복사</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Component -->
+    <div id="footer-container"></div>
+    
+    <!-- JavaScript Files -->
+    <script src="../../assets/js/common/component-loader.js"></script>
+    <script src="../../assets/js/common/main.js"></script>
+    <script src="../../assets/js/common/api.js"></script>
+    <script src="../../assets/js/common/utils.js"></script>
+    <script src="../../assets/js/ideas/detail.js"></script>
+    </div> <!-- End main-container -->
+</body>
+</html>

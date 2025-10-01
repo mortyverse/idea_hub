@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이디어 목록 - 아이디어 허브</title>
+    <meta name="description" content="다양한 창의적인 아이디어들을 탐색하고 새로운 영감을 얻어보세요. 집단지성으로 발전하는 아이디어 플랫폼입니다.">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../../assets/css/common/main.css">
+    <link rel="stylesheet" href="../../assets/css/common/components.css">
+    <link rel="stylesheet" href="../../assets/css/common/responsive.css">
+    <link rel="stylesheet" href="../../assets/css/ideas/list.css">
+    
+    <!-- Web Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="../../assets/images/icons/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Main container for component loading -->
+    <div class="main-container">
+        <!-- Header Component -->
+        <div id="header-container"></div>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-header-content">
+                    <div class="page-title-section">
+                        <h1 class="page-title">
+                            <span class="page-title-icon">💡</span>
+                            <span class="page-title-text">아이디어 목록</span>
+                        </h1>
+                        <p class="page-description">
+                            창의적인 아이디어들을 탐색하고 새로운 영감을 얻어보세요.
+                        </p>
+                    </div>
+                    
+                    <!-- Breadcrumb -->
+                    <nav class="breadcrumb" aria-label="페이지 경로">
+                        <ol class="breadcrumb-list">
+                            <li class="breadcrumb-item">
+                                <a href="../../index.html" class="breadcrumb-link">홈</a>
+                            </li>
+                            <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+                                아이디어 목록
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- Search and Filter Section -->
+            <div class="search-filter-section">
+                <div class="search-filter-container">
+                    <!-- Search Bar -->
+                    <div class="search-bar">
+                        <div class="search-input-container">
+                            <input 
+                                type="text" 
+                                id="search-input" 
+                                class="search-input" 
+                                placeholder="아이디어를 검색하세요..."
+                                aria-label="아이디어 검색"
+                            >
+                            <button type="button" id="search-btn" class="search-btn" aria-label="검색">
+                                <span class="search-icon">🔍</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Filter Options -->
+                    <div class="filter-options">
+                        <div class="filter-group">
+                            <label for="sort-select" class="filter-label">정렬</label>
+                            <select id="sort-select" class="filter-select">
+                                <option value="created_at">최신순</option>
+                                <option value="view_count">조회수순</option>
+                                <option value="fork_count">포크수순</option>
+                                <option value="comment_count">댓글수순</option>
+                                <option value="title">제목순</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="tag-filter" class="filter-label">태그</label>
+                            <select id="tag-filter" class="filter-select">
+                                <option value="">전체 태그</option>
+                                <!-- Tags will be loaded dynamically -->
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="writer-filter" class="filter-label">작성자</label>
+                            <input 
+                                type="text" 
+                                id="writer-filter" 
+                                class="filter-input" 
+                                placeholder="작성자명"
+                            >
+                        </div>
+                        
+                        <button type="button" id="clear-filters" class="btn btn-outline">
+                            <span class="btn-icon">🔄</span>
+                            <span class="btn-text">필터 초기화</span>
+                        </button>
+                        
+                        <button type="button" id="create-idea-btn" class="btn btn-primary">
+                            <span class="btn-icon">➕</span>
+                            <span class="btn-text">새 아이디어 작성</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ideas Grid -->
+            <div class="ideas-section">
+                <div class="ideas-header" id="ideas-header" style="display: none;">
+                    <div class="ideas-count">
+                        <span id="ideas-count-text">아이디어를 불러오는 중...</span>
+                    </div>
+                </div>
+                
+                <!-- Loading State -->
+                <div id="loading-state" class="loading-state">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                    </div>
+                    <p class="loading-text">로딩 중...</p>
+                </div>
+                
+                <!-- Ideas Grid -->
+                <div id="ideas-grid" class="ideas-grid" style="display: none;">
+                    <!-- Ideas will be loaded dynamically -->
+                </div>
+                
+                <!-- Empty State -->
+                <div id="empty-state" class="empty-state" style="display: none;">
+                    <div class="empty-icon">💡</div>
+                    <h3 class="empty-title">아이디어가 없습니다</h3>
+                    <p class="empty-description">
+                        아직 등록된 아이디어가 없습니다.<br>
+                        첫 번째 아이디어를 작성해보세요!
+                    </p>
+                    <button type="button" id="empty-create-btn" class="btn btn-primary">
+                        <span class="btn-icon">➕</span>
+                        <span class="btn-text">아이디어 작성하기</span>
+                    </button>
+                </div>
+                
+                <!-- Error State -->
+                <div id="error-state" class="error-state" style="display: none;">
+                    <div class="error-icon">⚠️</div>
+                    <h3 class="error-title">오류가 발생했습니다</h3>
+                    <p class="error-description">
+                        아이디어를 불러오는 중 문제가 발생했습니다.<br>
+                        잠시 후 다시 시도해주세요.
+                    </p>
+                    <button type="button" id="retry-btn" class="btn btn-primary">
+                        <span class="btn-icon">🔄</span>
+                        <span class="btn-text">다시 시도</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div id="pagination-container" class="pagination-container" style="display: none;">
+                <nav class="pagination" aria-label="페이지 네비게이션">
+                    <button type="button" id="prev-page" class="pagination-btn pagination-prev" disabled>
+                        <span class="pagination-icon">‹</span>
+                        <span class="pagination-text">이전</span>
+                    </button>
+                    
+                    <div class="pagination-pages" id="pagination-pages">
+                        <!-- Page numbers will be generated dynamically -->
+                    </div>
+                    
+                    <button type="button" id="next-page" class="pagination-btn pagination-next" disabled>
+                        <span class="pagination-text">다음</span>
+                        <span class="pagination-icon">›</span>
+                    </button>
+                </nav>
+                
+                <div class="pagination-info">
+                    <span id="pagination-info-text">페이지 정보</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer Component -->
+    <div id="footer-container"></div>
+    
+    <!-- Idea Card Template -->
+    <template id="idea-card-template">
+        <article class="idea-card" data-idea-id="">
+            <div class="idea-card-header">
+                <h3 class="idea-title">
+                    <a href="detail.html?id=" class="idea-title-link"></a>
+                </h3>
+                <div class="idea-meta">
+                    <span class="idea-writer">
+                        <span class="meta-icon">👤</span>
+                        <span class="meta-text"></span>
+                    </span>
+                    <span class="idea-date">
+                        <span class="meta-icon">🕒</span>
+                        <span class="meta-text"></span>
+                    </span>
+                </div>
+            </div>
+            
+            <div class="idea-card-body">
+                <p class="idea-content"></p>
+            </div>
+            
+            <div class="idea-card-footer">
+                <div class="idea-stats">
+                    <span class="stat-item">
+                        <span class="stat-icon">👀</span>
+                        <span class="stat-count"></span>
+                    </span>
+                    <span class="stat-item">
+                        <span class="stat-icon">🍴</span>
+                        <span class="stat-count"></span>
+                    </span>
+                    <span class="stat-item">
+                        <span class="stat-icon">💬</span>
+                        <span class="stat-count"></span>
+                    </span>
+                </div>
+                
+                <div class="idea-tags">
+                    <!-- Tags will be added dynamically -->
+                </div>
+            </div>
+        </article>
+    </template>
+    
+    <!-- Footer Component -->
+    <div id="footer-container"></div>
+    
+    <!-- JavaScript Files -->
+    <script src="../../assets/js/common/component-loader.js"></script>
+    <script src="../../assets/js/common/main.js"></script>
+    <script src="../../assets/js/common/api.js"></script>
+    <script src="../../assets/js/common/utils.js"></script>
+    <script src="../../assets/js/ideas/list.js"></script>
+    </div> <!-- End main-container -->
+</body>
+</html>

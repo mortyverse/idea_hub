@@ -141,26 +141,35 @@ window.componentLoader = new ComponentLoader();
 // 페이지 로드 시 자동으로 헤더와 푸터 로드
 document.addEventListener('DOMContentLoaded', async () => {
     try {
+        // 현재 페이지 경로에 따라 컴포넌트 경로 결정
+        const currentPath = window.location.pathname;
+        let headerPath, footerPath;
+        
+        if (currentPath.includes('/pages/')) {
+            // pages 폴더 내의 페이지들
+            headerPath = '../../components/header.html';
+            footerPath = '../../components/footer.html';
+        } else {
+            // 루트 페이지들
+            headerPath = 'components/header.html';
+            footerPath = 'components/footer.html';
+        }
+        
         // 헤더와 푸터를 병렬로 로드
         await window.componentLoader.loadMultipleComponents([
             {
-                path: 'components/header.html',
-                target: '.main-container',
-                position: 'afterbegin'
+                path: headerPath,
+                target: '#header-container',
+                position: 'beforeend'
             },
             {
-                path: 'components/footer.html',
-                target: '.main-container',
+                path: footerPath,
+                target: '#footer-container',
                 position: 'beforeend'
             }
         ]);
 
         console.log('헤더와 푸터 컴포넌트가 성공적으로 로드되었습니다.');
-        
-        // 컴포넌트 로드 완료 후 기존 스크립트 실행
-        if (typeof initializePage === 'function') {
-            initializePage();
-        }
 
     } catch (error) {
         console.error('컴포넌트 로딩 중 오류 발생:', error);

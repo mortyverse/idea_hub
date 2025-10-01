@@ -8,9 +8,9 @@
 // 데이터베이스 연결 설정
 // 보안상 환경변수나 별도 설정 파일 사용 권장
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'idea_hub');
-define('DB_USER', 'root');
-define('DB_PASS', ''); // 실제 배포 시 강력한 비밀번호 사용 필수!
+define('DB_NAME', 'leehan8422');
+define('DB_USER', 'leehan8422');
+define('DB_PASS', 'wjdgks2399!'); // 실제 배포 시 강력한 비밀번호 사용 필수!
 define('DB_CHARSET', 'utf8mb4');
 
 // Database connection class

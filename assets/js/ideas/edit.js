@@ -545,7 +545,7 @@ class IdeaEditPage {
             try {
                 console.log('Trying edit API path:', apiPath);
                 const response = await fetch(apiPath, {
-                    method: 'PUT',
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -580,7 +580,15 @@ class IdeaEditPage {
                         return data;
                     } else if (data.success === false) {
                         console.warn('API returned error from:', apiPath, data.error);
-                        lastError = new Error(data.error || '아이디어 수정에 실패했습니다.');
+                        if (data.debug_error) {
+                            console.error('Debug Error:', data.debug_error);
+                            console.error('Debug Trace:', data.debug_trace);
+                        }
+                        let errorMessage = data.error || '아이디어 수정에 실패했습니다.';
+                        if (data.debug_error) {
+                            errorMessage += '\n\n디버그 정보: ' + data.debug_error;
+                        }
+                        lastError = new Error(errorMessage);
                         continue;
                     }
                 }

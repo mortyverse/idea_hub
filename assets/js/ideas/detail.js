@@ -639,6 +639,7 @@ class IdeaDetailPage {
         
         for (const apiPath of apiPaths) {
             try {
+                console.log('Attempting delete API call:', apiPath, requestData);
                 response = await fetch(apiPath, {
                     method: 'DELETE',
                     headers: {
@@ -647,10 +648,20 @@ class IdeaDetailPage {
                     body: JSON.stringify(requestData)
                 });
                 
+                console.log('Delete API response status:', response.status);
+                
                 if (response.ok) {
+                    console.log('Delete API call successful with path:', apiPath);
                     break;
                 } else {
-                    console.error('HTTP error:', response.status);
+                    console.error('HTTP error:', response.status, 'for path:', apiPath);
+                    // Try to get error response text
+                    try {
+                        const errorText = await response.text();
+                        console.error('Error response text:', errorText);
+                    } catch (e) {
+                        console.error('Could not read error response:', e);
+                    }
                     continue;
                 }
             } catch (error) {
@@ -675,7 +686,14 @@ class IdeaDetailPage {
                 window.location.href = 'list.html';
             }, 2000);
         } else {
-            throw new Error(data.error || '삭제에 실패했습니다.');
+            // Show detailed error in debug mode
+            let errorMessage = data.error || '삭제에 실패했습니다.';
+            if (data.debug_error) {
+                console.error('Debug Error:', data.debug_error);
+                console.error('Debug Trace:', data.debug_trace);
+                errorMessage += '\n\n디버그 정보: ' + data.debug_error;
+            }
+            throw new Error(errorMessage);
         }
     }
     

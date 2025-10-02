@@ -133,21 +133,21 @@ try {
         $deleteIdeaResult = deleteIdea($db, $ideaId);
         
         if (!$deleteIdeaResult) {
-            throw new Exception('아이디어 삭제에 실패했습니다.');
+            throw new Exception('아이디어 상태 업데이트에 실패했습니다. 아이디어 ID: ' . $ideaId);
         }
         
         // Soft delete related comments
         $deleteCommentsResult = deleteIdeaComments($db, $ideaId);
         
         if (!$deleteCommentsResult) {
-            throw new Exception('관련 댓글 삭제에 실패했습니다.');
+            throw new Exception('관련 댓글 상태 업데이트에 실패했습니다. 아이디어 ID: ' . $ideaId);
         }
         
         // Remove idea-tag relationships
         $removeTagsResult = removeIdeaTags($db, $ideaId);
         
         if (!$removeTagsResult) {
-            throw new Exception('태그 연결 해제에 실패했습니다.');
+            throw new Exception('태그 연결 해제에 실패했습니다. 아이디어 ID: ' . $ideaId);
         }
         
         // Commit transaction
@@ -174,22 +174,43 @@ try {
     } catch (Exception $e) {
         // Rollback transaction
         $db->rollback();
-        throw $e;
+        
+        // Log detailed transaction error
+        logError("Transaction failed in delete operation", [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+            'idea_id' => $ideaId,
+            'writer' => $originalWriter
+        ]);
+        
+        throw new Exception("삭제 트랜잭션 실패: " . $e->getMessage());
     }
     
 } catch (Exception $e) {
     // Log error
     logError("Idea delete API failed", [
         'error' => $e->getMessage(),
+        'trace' => $e->getTraceAsString(),
         'idea_id' => $ideaId ?? 0,
         'writer' => $originalWriter ?? 'unknown'
     ]);
     
     http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => '아이디어 삭제 중 오류가 발생했습니다.'
-    ]);
+    
+    // In debug mode, show detailed error
+    if (defined('DEBUG_MODE') && DEBUG_MODE) {
+        echo json_encode([
+            'success' => false,
+            'error' => '아이디어 삭제 중 오류가 발생했습니다.',
+            'debug_error' => $e->getMessage(),
+            'debug_trace' => $e->getTraceAsString()
+        ]);
+    } else {
+        echo json_encode([
+            'success' => false,
+            'error' => '아이디어 삭제 중 오류가 발생했습니다.'
+        ]);
+    }
 }
 
 /**
@@ -213,15 +234,35 @@ function getCurrentIdea($db, $ideaId) {
  * 아이디어 소프트 삭제 (상태를 'deleted'로 변경)
  */
 function deleteIdea($db, $ideaId) {
-    $sql = "UPDATE ideas 
-            SET status = 'deleted', 
-                updated_at = NOW()
-            WHERE id = :idea_id AND status = 'active'";
-    
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':idea_id', $ideaId, PDO::PARAM_INT);
-    
-    return $stmt->execute();
+    try {
+        $sql = "UPDATE ideas 
+                SET status = 'deleted', 
+                    updated_at = NOW()
+                WHERE id = :idea_id AND status = 'active'";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':idea_id', $ideaId, PDO::PARAM_INT);
+        
+        $result = $stmt->execute();
+        
+        // Check if any rows were affected
+        if ($result && $stmt->rowCount() === 0) {
+            logError("No rows affected in deleteIdea", [
+                'idea_id' => $ideaId,
+                'sql' => $sql
+            ]);
+            return false;
+        }
+        
+        return $result;
+    } catch (PDOException $e) {
+        logError("PDO Error in deleteIdea", [
+            'error' => $e->getMessage(),
+            'idea_id' => $ideaId,
+            'sql' => $sql ?? 'N/A'
+        ]);
+        return false;
+    }
 }
 
 /**
@@ -229,15 +270,33 @@ function deleteIdea($db, $ideaId) {
  * 아이디어와 관련된 모든 댓글 소프트 삭제
  */
 function deleteIdeaComments($db, $ideaId) {
-    $sql = "UPDATE comments 
-            SET status = 'deleted', 
-                updated_at = NOW()
-            WHERE idea_id = :idea_id AND status = 'active'";
-    
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':idea_id', $ideaId, PDO::PARAM_INT);
-    
-    return $stmt->execute();
+    try {
+        $sql = "UPDATE comments 
+                SET status = 'deleted', 
+                    updated_at = NOW()
+                WHERE idea_id = :idea_id AND status = 'active'";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':idea_id', $ideaId, PDO::PARAM_INT);
+        
+        $result = $stmt->execute();
+        
+        // Log affected rows for debugging
+        logError("Comments deletion result", [
+            'idea_id' => $ideaId,
+            'affected_rows' => $stmt->rowCount(),
+            'result' => $result
+        ]);
+        
+        return $result;
+    } catch (PDOException $e) {
+        logError("PDO Error in deleteIdeaComments", [
+            'error' => $e->getMessage(),
+            'idea_id' => $ideaId,
+            'sql' => $sql ?? 'N/A'
+        ]);
+        return false;
+    }
 }
 
 /**

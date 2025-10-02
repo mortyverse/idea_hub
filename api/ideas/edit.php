@@ -212,22 +212,43 @@ try {
     } catch (Exception $e) {
         // Rollback transaction
         $db->rollback();
-        throw $e;
+        
+        // Log detailed transaction error
+        logError("Transaction failed in edit operation", [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+            'idea_id' => $ideaId,
+            'writer' => $originalWriter
+        ]);
+        
+        throw new Exception("수정 트랜잭션 실패: " . $e->getMessage());
     }
     
 } catch (Exception $e) {
     // Log error
     logError("Idea edit API failed", [
         'error' => $e->getMessage(),
+        'trace' => $e->getTraceAsString(),
         'idea_id' => $ideaId ?? 0,
         'writer' => $originalWriter ?? 'unknown'
     ]);
     
     http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => '아이디어 수정 중 오류가 발생했습니다.'
-    ]);
+    
+    // In debug mode, show detailed error
+    if (defined('DEBUG_MODE') && DEBUG_MODE) {
+        echo json_encode([
+            'success' => false,
+            'error' => '아이디어 수정 중 오류가 발생했습니다.',
+            'debug_error' => $e->getMessage(),
+            'debug_trace' => $e->getTraceAsString()
+        ]);
+    } else {
+        echo json_encode([
+            'success' => false,
+            'error' => '아이디어 수정 중 오류가 발생했습니다.'
+        ]);
+    }
 }
 
 /**
@@ -251,18 +272,40 @@ function getCurrentIdea($db, $ideaId) {
  * 아이디어 정보 업데이트
  */
 function updateIdea($db, $ideaId, $title, $content) {
-    $sql = "UPDATE ideas 
-            SET title = :title, 
-                content = :content, 
-                updated_at = NOW()
-            WHERE id = :idea_id AND status = 'active'";
-    
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':idea_id', $ideaId, PDO::PARAM_INT);
-    $stmt->bindParam(':title', $title, PDO::PARAM_STR);
-    $stmt->bindParam(':content', $content, PDO::PARAM_STR);
-    
-    return $stmt->execute();
+    try {
+        $sql = "UPDATE ideas 
+                SET title = :title, 
+                    content = :content, 
+                    updated_at = NOW()
+                WHERE id = :idea_id AND status = 'active'";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':idea_id', $ideaId, PDO::PARAM_INT);
+        $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+        $stmt->bindParam(':content', $content, PDO::PARAM_STR);
+        
+        $result = $stmt->execute();
+        
+        // Check if any rows were affected
+        if ($result && $stmt->rowCount() === 0) {
+            logError("No rows affected in updateIdea", [
+                'idea_id' => $ideaId,
+                'title' => $title,
+                'sql' => $sql
+            ]);
+            return false;
+        }
+        
+        return $result;
+    } catch (PDOException $e) {
+        logError("PDO Error in updateIdea", [
+            'error' => $e->getMessage(),
+            'idea_id' => $ideaId,
+            'title' => $title,
+            'sql' => $sql ?? 'N/A'
+        ]);
+        return false;
+    }
 }
 
 /**

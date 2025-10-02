@@ -19,6 +19,33 @@
     
     <!-- Favicon -->
     <link rel="icon" href="../../assets/images/icons/favicon.ico" type="image/x-icon">
+    <style>
+        .idea-meta-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .idea-meta {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 1rem !important;
+        }
+        .idea-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .stat-content {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+        }
+        .stat-label {
+            white-space: nowrap;
+        }
+    </style>
 </head>
 <body>
     <!-- Main container for component loading -->
@@ -83,17 +110,14 @@
                             <div class="idea-meta">
                                 <div class="meta-item">
                                     <span class="meta-icon">👤</span>
-                                    <span class="meta-label">작성자</span>
                                     <span class="meta-value" id="idea-writer">작성자명</span>
                                 </div>
                                 <div class="meta-item">
                                     <span class="meta-icon">🕒</span>
-                                    <span class="meta-label">작성일</span>
                                     <span class="meta-value" id="idea-date">날짜</span>
                                 </div>
                                 <div class="meta-item">
                                     <span class="meta-icon">👀</span>
-                                    <span class="meta-label">조회수</span>
                                     <span class="meta-value" id="idea-view-count">0</span>
                                 </div>
                             </div>
@@ -133,22 +157,22 @@
                 <div class="idea-stats">
                     <div class="stats-grid">
                         <div class="stat-item">
-                            <span class="stat-icon">👀</span>
                             <div class="stat-content">
+                                <span class="stat-icon">👀</span>
                                 <span class="stat-label">조회수</span>
                                 <span class="stat-value" id="stat-view-count">0</span>
                             </div>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-icon">🍴</span>
                             <div class="stat-content">
+                                <span class="stat-icon">🍴</span>
                                 <span class="stat-label">포크</span>
                                 <span class="stat-value" id="stat-fork-count">0</span>
                             </div>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-icon">💬</span>
                             <div class="stat-content">
+                                <span class="stat-icon">💬</span>
                                 <span class="stat-label">댓글</span>
                                 <span class="stat-value" id="stat-comment-count">0</span>
                             </div>

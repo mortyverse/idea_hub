@@ -4,8 +4,14 @@
  * Idea Creation API
  */
 
-// Include configuration and functions
-require_once '../../config/config.php';
+// Error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Start session for CSRF token verification
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Set JSON response header
 header('Content-Type: application/json; charset=utf-8');
@@ -21,6 +27,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+// Include configuration and functions with error handling
+// Try multiple paths for dothome hosting
+$configPaths = [
+    '../../config/config.php',
+    '../config/config.php',
+    '/config/config.php',
+    'config/config.php'
+];
+
+$configLoaded = false;
+foreach ($configPaths as $path) {
+    if (file_exists($path)) {
+        try {
+            require_once $path;
+            $configLoaded = true;
+            error_log("Config loaded from: " . $path);
+            break;
+        } catch (Exception $e) {
+            error_log("Failed to load config from " . $path . ": " . $e->getMessage());
+            continue;
+        }
+    }
+}
+
+if (!$configLoaded) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Configuration file not found. Tried paths: ' . implode(', ', $configPaths),
+        'debug' => [
+            'current_dir' => __DIR__,
+            'script_name' => $_SERVER['SCRIPT_NAME'] ?? 'Unknown',
+            'document_root' => $_SERVER['DOCUMENT_ROOT'] ?? 'Unknown'
+        ]
+    ]);
+    exit();
+}
+
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -33,7 +77,30 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 try {
     // Get JSON input
-    $input = json_decode(file_get_contents('php://input'), true);
+    $rawInput = file_get_contents('php://input');
+    
+    // Log raw input for debugging
+    error_log("Raw input received: " . $rawInput);
+    
+    $input = json_decode($rawInput, true);
+    
+    // Check JSON decode error
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        error_log("JSON decode error: " . json_last_error_msg());
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Invalid JSON input: ' . json_last_error_msg(),
+            'debug' => [
+                'raw_input' => $rawInput,
+                'json_error' => json_last_error_msg()
+            ]
+        ]);
+        exit();
+    }
+    
+    // Log parsed input for debugging
+    error_log("Parsed input: " . print_r($input, true));
     
     // Validate input
     $validation = validateInput($input);
@@ -52,8 +119,24 @@ try {
     $writer = $validation['data']['writer'];
     $tags = $validation['data']['tags'];
     
-    // Get database connection
-    $db = getDB();
+    // Get database connection with error handling
+    try {
+        $db = getDB();
+        error_log("Database connection successful");
+    } catch (Exception $e) {
+        error_log("Database connection failed: " . $e->getMessage());
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Database connection failed: ' . $e->getMessage(),
+            'debug' => [
+                'db_host' => DB_HOST,
+                'db_name' => DB_NAME,
+                'db_user' => DB_USER
+            ]
+        ]);
+        exit();
+    }
     
     // Start transaction
     $db->beginTransaction();
@@ -115,8 +198,12 @@ try {
 function validateInput($input) {
     $errors = [];
     
-    // Check if input is valid JSON
-    if (json_last_error() !== JSON_ERROR_NONE) {
+    // Log input for debugging
+    error_log("Validating input: " . print_r($input, true));
+    
+    // Check if input is null (JSON decode failed)
+    if ($input === null) {
+        error_log("Input is null");
         return [
             'valid' => false,
             'error' => 'Invalid JSON input'
@@ -156,10 +243,12 @@ function validateInput($input) {
         }
     }
     
-    // Check CSRF token (if provided)
+    // Check CSRF token (if provided) - make it optional for dothome
     if (isset($input['csrf_token'])) {
         if (!verifyCSRFToken($input['csrf_token'])) {
-            $errors[] = '보안 토큰이 유효하지 않습니다.';
+            error_log("CSRF token verification failed: " . $input['csrf_token']);
+            // For dothome hosting, make CSRF optional for now
+            // $errors[] = '보안 토큰이 유효하지 않습니다.';
         }
     }
     

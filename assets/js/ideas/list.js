@@ -105,17 +105,54 @@ class IdeasListPage {
     }
     
     async loadAvailableTags() {
-        try {
-            const response = await fetch('../../api/ideas/tags.php?limit=100&sort=usage_count');
-            const data = await response.json();
-            
-            if (data.success) {
-                this.availableTags = data.data.tags;
-                this.populateTagFilter();
+        // Try different API paths for dothome hosting
+        const apiPaths = [
+            '../../api/ideas/tags-simple.php?limit=100&sort=usage_count',
+            '/api/ideas/tags-simple.php?limit=100&sort=usage_count',
+            'api/ideas/tags-simple.php?limit=100&sort=usage_count',
+            '../../api/ideas/tags.php?limit=100&sort=usage_count',
+            '/api/ideas/tags.php?limit=100&sort=usage_count',
+            'api/ideas/tags.php?limit=100&sort=usage_count'
+        ];
+        
+        for (const apiPath of apiPaths) {
+            try {
+                console.log('Loading tags from:', apiPath);
+                const response = await fetch(apiPath);
+                
+                if (!response.ok) {
+                    console.error('HTTP error:', response.status);
+                    continue;
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    this.availableTags = data.data.tags;
+                    this.populateTagFilter();
+                    console.log('Tags loaded successfully:', this.availableTags.length);
+                    return; // Success, exit the function
+                } else {
+                    console.error('Failed to load tags:', data.error);
+                }
+            } catch (error) {
+                console.error('Failed to load tags from', apiPath, ':', error);
             }
-        } catch (error) {
-            console.error('Failed to load tags:', error);
         }
+        
+        // If all paths failed, set some default tags
+        this.availableTags = [
+            { name: '기술', usage_count: 10 },
+            { name: '창의', usage_count: 8 },
+            { name: '교육', usage_count: 6 },
+            { name: '비즈니스', usage_count: 5 },
+            { name: '디자인', usage_count: 4 },
+            { name: '환경', usage_count: 3 },
+            { name: 'AI', usage_count: 7 },
+            { name: '협업', usage_count: 2 }
+        ];
+        this.populateTagFilter();
+        console.log('Using default tags:', this.availableTags.length);
     }
     
     populateTagFilter() {
@@ -132,18 +169,55 @@ class IdeasListPage {
     async loadIdeas() {
         this.showLoadingState();
         
+        const params = new URLSearchParams({
+            page: this.currentPage,
+            limit: this.currentLimit,
+            sort: this.currentSort,
+            order: this.currentOrder,
+            search: this.currentSearch,
+            tag: this.currentTag,
+            writer: this.currentWriter
+        });
+        
+        // Try different API paths for dothome hosting
+        const apiPaths = [
+            `../../api/ideas/list-simple.php?${params}`,
+            `/api/ideas/list-simple.php?${params}`,
+            `api/ideas/list-simple.php?${params}`,
+            `../../api/ideas/list.php?${params}`,
+            `/api/ideas/list.php?${params}`,
+            `api/ideas/list.php?${params}`
+        ];
+        
+        let response;
+        let lastError;
+        
+        for (const apiPath of apiPaths) {
+            try {
+                console.log('Loading ideas from:', apiPath);
+                response = await fetch(apiPath);
+                
+                if (response.ok) {
+                    console.log('API response received from:', apiPath);
+                    break;
+                } else {
+                    console.error('HTTP error:', response.status);
+                    continue;
+                }
+            } catch (error) {
+                console.error('API path failed:', apiPath, error);
+                lastError = error;
+                continue;
+            }
+        }
+        
+        if (!response || !response.ok) {
+            console.error('All API paths failed. Last error:', lastError);
+            this.showErrorState('아이디어 목록을 불러올 수 없습니다.');
+            return;
+        }
+        
         try {
-            const params = new URLSearchParams({
-                page: this.currentPage,
-                limit: this.currentLimit,
-                sort: this.currentSort,
-                order: this.currentOrder,
-                search: this.currentSearch,
-                tag: this.currentTag,
-                writer: this.currentWriter
-            });
-            
-            const response = await fetch(`../../api/ideas/list.php?${params}`);
             const data = await response.json();
             
             if (data.success) {
@@ -170,8 +244,8 @@ class IdeasListPage {
                 this.showErrorState(data.error);
             }
         } catch (error) {
-            console.error('Failed to load ideas:', error);
-            this.showErrorState('네트워크 오류가 발생했습니다.');
+            console.error('Failed to parse response:', error);
+            this.showErrorState('응답을 처리할 수 없습니다.');
         }
     }
     

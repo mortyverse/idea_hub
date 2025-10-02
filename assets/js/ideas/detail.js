@@ -95,8 +95,45 @@ class IdeaDetailPage {
     async loadIdeaDetail() {
         this.showLoadingState();
         
+        // Try different API paths for dothome hosting
+        const apiPaths = [
+            `../../api/ideas/detail-simple.php?id=${this.ideaId}`,
+            `/api/ideas/detail-simple.php?id=${this.ideaId}`,
+            `api/ideas/detail-simple.php?id=${this.ideaId}`,
+            `../../api/ideas/detail.php?id=${this.ideaId}`,
+            `/api/ideas/detail.php?id=${this.ideaId}`,
+            `api/ideas/detail.php?id=${this.ideaId}`
+        ];
+        
+        let response;
+        let lastError;
+        
+        for (const apiPath of apiPaths) {
+            try {
+                console.log('Loading idea detail from:', apiPath);
+                response = await fetch(apiPath);
+                
+                if (response.ok) {
+                    console.log('API response received from:', apiPath);
+                    break;
+                } else {
+                    console.error('HTTP error:', response.status);
+                    continue;
+                }
+            } catch (error) {
+                console.error('API path failed:', apiPath, error);
+                lastError = error;
+                continue;
+            }
+        }
+        
+        if (!response || !response.ok) {
+            console.error('All API paths failed. Last error:', lastError);
+            this.showErrorState('아이디어를 불러올 수 없습니다.');
+            return;
+        }
+        
         try {
-            const response = await fetch(`../../api/ideas/detail.php?id=${this.ideaId}`);
             const data = await response.json();
             
             if (data.success) {
@@ -123,8 +160,8 @@ class IdeaDetailPage {
                 this.showErrorState(data.error);
             }
         } catch (error) {
-            console.error('Failed to load idea detail:', error);
-            this.showErrorState('네트워크 오류가 발생했습니다.');
+            console.error('Failed to parse response:', error);
+            this.showErrorState('응답을 처리할 수 없습니다.');
         }
     }
     
@@ -280,7 +317,10 @@ class IdeaDetailPage {
                 this.showNotification('댓글이 성공적으로 등록되었습니다.', 'success');
                 this.commentForm.reset();
                 this.updateCommentCounter();
-                this.loadIdeaDetail(); // Reload to get updated comments
+                // Reload comments without full page reload
+                setTimeout(() => {
+                    this.loadIdeaDetail();
+                }, 1000);
             } else {
                 this.showNotification(data.error || '댓글 등록에 실패했습니다.', 'error');
             }

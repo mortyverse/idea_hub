@@ -4,8 +4,36 @@
  * Idea Detail API
  */
 
-// Include configuration and functions
-require_once '../../config/config.php';
+// Include configuration and functions with error handling
+// Try multiple paths for dothome hosting
+$configPaths = [
+    '../../config/config.php',
+    '../config/config.php',
+    '/config/config.php',
+    'config/config.php'
+];
+
+$configLoaded = false;
+foreach ($configPaths as $path) {
+    if (file_exists($path)) {
+        try {
+            require_once $path;
+            $configLoaded = true;
+            break;
+        } catch (Exception $e) {
+            continue;
+        }
+    }
+}
+
+if (!$configLoaded) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Configuration file not found'
+    ]);
+    exit();
+}
 
 // Set JSON response header
 header('Content-Type: application/json; charset=utf-8');

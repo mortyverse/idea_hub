@@ -11,16 +11,16 @@
 -- 1. 아이디어 테이블 (ideas)
 -- =============================================
 CREATE TABLE IF NOT EXISTS `ideas` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '아이디어 고유 번호',
+    `id` INT NOT NULL AUTO_INCREMENT COMMENT '아이디어 고유 번호',
     `title` VARCHAR(255) NOT NULL COMMENT '아이디어 제목',
     `content` TEXT NOT NULL COMMENT '아이디어 상세 설명',
     `writer` VARCHAR(100) NOT NULL COMMENT '작성자',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '작성일',
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
-    `view_count` INT(11) DEFAULT 0 COMMENT '조회수',
-    `fork_count` INT(11) DEFAULT 0 COMMENT '포크 수',
-    `comment_count` INT(11) DEFAULT 0 COMMENT '댓글 수',
-    `forked_from_id` INT(11) NULL COMMENT '원본 아이디어 ID (포크된 경우)',
+    `view_count` INT DEFAULT 0 COMMENT '조회수',
+    `fork_count` INT DEFAULT 0 COMMENT '포크 수',
+    `comment_count` INT DEFAULT 0 COMMENT '댓글 수',
+    `forked_from_id` INT NULL COMMENT '원본 아이디어 ID (포크된 경우)',
     `status` ENUM('active', 'deleted', 'draft') DEFAULT 'active' COMMENT '상태',
     PRIMARY KEY (`id`),
     INDEX `idx_writer` (`writer`),
@@ -36,9 +36,9 @@ CREATE TABLE IF NOT EXISTS `ideas` (
 -- 2. 태그 테이블 (tags)
 -- =============================================
 CREATE TABLE IF NOT EXISTS `tags` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '태그 고유 번호',
+    `id` INT NOT NULL AUTO_INCREMENT COMMENT '태그 고유 번호',
     `name` VARCHAR(50) NOT NULL COMMENT '태그 이름',
-    `usage_count` INT(11) DEFAULT 1 COMMENT '사용 횟수',
+    `usage_count` INT DEFAULT 1 COMMENT '사용 횟수',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
     PRIMARY KEY (`id`),
@@ -51,8 +51,8 @@ CREATE TABLE IF NOT EXISTS `tags` (
 -- 3. 아이디어-태그 연결 테이블 (idea_tags)
 -- =============================================
 CREATE TABLE IF NOT EXISTS `idea_tags` (
-    `idea_id` INT(11) NOT NULL COMMENT '아이디어 ID',
-    `tag_id` INT(11) NOT NULL COMMENT '태그 ID',
+    `idea_id` INT NOT NULL COMMENT '아이디어 ID',
+    `tag_id` INT NOT NULL COMMENT '태그 ID',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '연결일',
     PRIMARY KEY (`idea_id`, `tag_id`),
     INDEX `idx_tag_id` (`tag_id`),
@@ -64,11 +64,11 @@ CREATE TABLE IF NOT EXISTS `idea_tags` (
 -- 4. 댓글 테이블 (comments)
 -- =============================================
 CREATE TABLE IF NOT EXISTS `comments` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '댓글 고유 번호',
-    `idea_id` INT(11) NOT NULL COMMENT '아이디어 ID',
+    `id` INT NOT NULL AUTO_INCREMENT COMMENT '댓글 고유 번호',
+    `idea_id` INT NOT NULL COMMENT '아이디어 ID',
     `writer` VARCHAR(100) NOT NULL COMMENT '작성자',
     `content` TEXT NOT NULL COMMENT '댓글 내용',
-    `parent_comment_id` INT(11) NULL COMMENT '부모 댓글 ID (대댓글용)',
+    `parent_comment_id` INT NULL COMMENT '부모 댓글 ID (대댓글용)',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '작성일',
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
     `status` ENUM('active', 'deleted') DEFAULT 'active' COMMENT '상태',
@@ -86,10 +86,10 @@ CREATE TABLE IF NOT EXISTS `comments` (
 -- 5. 마인드맵 노드 테이블 (mindmap_nodes)
 -- =============================================
 CREATE TABLE IF NOT EXISTS `mindmap_nodes` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '노드 고유 번호',
-    `idea_id` INT(11) NOT NULL COMMENT '아이디어 ID',
+    `id` INT NOT NULL AUTO_INCREMENT COMMENT '노드 고유 번호',
+    `idea_id` INT NOT NULL COMMENT '아이디어 ID',
     `node_text` VARCHAR(500) NOT NULL COMMENT '노드 텍스트',
-    `parent_node_id` INT(11) NULL COMMENT '부모 노드 ID',
+    `parent_node_id` INT NULL COMMENT '부모 노드 ID',
     `position_x` DECIMAL(10,2) DEFAULT 0.00 COMMENT 'X좌표',
     `position_y` DECIMAL(10,2) DEFAULT 0.00 COMMENT 'Y좌표',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `mindmap_nodes` (
 -- 6. 사용자 테이블 (users) - 향후 확장용
 -- =============================================
 CREATE TABLE IF NOT EXISTS `users` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '사용자 고유 번호',
+    `id` INT NOT NULL AUTO_INCREMENT COMMENT '사용자 고유 번호',
     `username` VARCHAR(50) NOT NULL COMMENT '사용자명',
     `email` VARCHAR(100) NOT NULL COMMENT '이메일',
     `password_hash` VARCHAR(255) NOT NULL COMMENT '비밀번호 해시',

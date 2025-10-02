@@ -79,42 +79,44 @@
                     <div class="idea-header-content">
                         <h1 class="idea-title" id="idea-title">아이디어 제목</h1>
                         
-                        <div class="idea-meta">
-                            <div class="meta-item">
-                                <span class="meta-icon">👤</span>
-                                <span class="meta-label">작성자</span>
-                                <span class="meta-value" id="idea-writer">작성자명</span>
+                        <div class="idea-meta-actions">
+                            <div class="idea-meta">
+                                <div class="meta-item">
+                                    <span class="meta-icon">👤</span>
+                                    <span class="meta-label">작성자</span>
+                                    <span class="meta-value" id="idea-writer">작성자명</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-icon">🕒</span>
+                                    <span class="meta-label">작성일</span>
+                                    <span class="meta-value" id="idea-date">날짜</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-icon">👀</span>
+                                    <span class="meta-label">조회수</span>
+                                    <span class="meta-value" id="idea-view-count">0</span>
+                                </div>
                             </div>
-                            <div class="meta-item">
-                                <span class="meta-icon">🕒</span>
-                                <span class="meta-label">작성일</span>
-                                <span class="meta-value" id="idea-date">날짜</span>
-                            </div>
-                            <div class="meta-item">
-                                <span class="meta-icon">👀</span>
-                                <span class="meta-label">조회수</span>
-                                <span class="meta-value" id="idea-view-count">0</span>
+                            
+                            <div class="idea-actions">
+                                <button type="button" id="fork-btn" class="btn btn-outline">
+                                    <span class="btn-icon">🍴</span>
+                                    <span class="btn-text">포크</span>
+                                </button>
+                                <button type="button" id="share-btn" class="btn btn-outline">
+                                    <span class="btn-icon">📤</span>
+                                    <span class="btn-text">공유</span>
+                                </button>
+                                <button type="button" id="bookmark-btn" class="btn btn-outline">
+                                    <span class="btn-icon">🔖</span>
+                                    <span class="btn-text">북마크</span>
+                                </button>
                             </div>
                         </div>
                         
                         <div class="idea-tags" id="idea-tags">
                             <!-- Tags will be loaded dynamically -->
                         </div>
-                    </div>
-                    
-                    <div class="idea-actions">
-                        <button type="button" id="fork-btn" class="btn btn-outline">
-                            <span class="btn-icon">🍴</span>
-                            <span class="btn-text">포크</span>
-                        </button>
-                        <button type="button" id="share-btn" class="btn btn-outline">
-                            <span class="btn-icon">📤</span>
-                            <span class="btn-text">공유</span>
-                        </button>
-                        <button type="button" id="bookmark-btn" class="btn btn-outline">
-                            <span class="btn-icon">🔖</span>
-                            <span class="btn-text">북마크</span>
-                        </button>
                     </div>
                 </header>
                 
@@ -132,18 +134,24 @@
                     <div class="stats-grid">
                         <div class="stat-item">
                             <span class="stat-icon">👀</span>
-                            <span class="stat-label">조회수</span>
-                            <span class="stat-value" id="stat-view-count">0</span>
+                            <div class="stat-content">
+                                <span class="stat-label">조회수</span>
+                                <span class="stat-value" id="stat-view-count">0</span>
+                            </div>
                         </div>
                         <div class="stat-item">
                             <span class="stat-icon">🍴</span>
-                            <span class="stat-label">포크</span>
-                            <span class="stat-value" id="stat-fork-count">0</span>
+                            <div class="stat-content">
+                                <span class="stat-label">포크</span>
+                                <span class="stat-value" id="stat-fork-count">0</span>
+                            </div>
                         </div>
                         <div class="stat-item">
                             <span class="stat-icon">💬</span>
-                            <span class="stat-label">댓글</span>
-                            <span class="stat-value" id="stat-comment-count">0</span>
+                            <div class="stat-content">
+                                <span class="stat-label">댓글</span>
+                                <span class="stat-value" id="stat-comment-count">0</span>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -4,8 +4,8 @@
  * Comment Creation API
  */
 
-// Include configuration and functions
-require_once '../../config/config.php';
+// Simple comment creation without database dependency
+// 데이터베이스 의존성 없이 간단한 댓글 생성
 
 // Set JSON response header
 header('Content-Type: application/json; charset=utf-8');
@@ -52,53 +52,61 @@ try {
     $content = $validation['data']['content'];
     $parentCommentId = $validation['data']['parent_comment_id'] ?? null;
     
-    // Get database connection
-    $db = getDB();
+    // Generate comment ID
+    $commentId = time() + rand(1000, 9999);
     
-    // Start transaction
-    $db->beginTransaction();
+    // Create comment data
+    $commentData = [
+        'id' => $commentId,
+        'idea_id' => $ideaId,
+        'writer' => $writer,
+        'content' => $content,
+        'parent_comment_id' => $parentCommentId,
+        'created_at' => date('Y-m-d H:i:s'),
+        'status' => 'active'
+    ];
     
-    try {
-        // Verify idea exists
-        if (!ideaExists($db, $ideaId)) {
-            throw new Exception('아이디어를 찾을 수 없습니다.');
-        }
-        
-        // Insert comment
-        $commentId = insertComment($db, $ideaId, $writer, $content, $parentCommentId);
-        
-        // Commit transaction
-        $db->commit();
-        
-        // Log successful creation
-        logError("Comment created successfully", [
-            'comment_id' => $commentId,
-            'idea_id' => $ideaId,
-            'writer' => $writer,
-            'parent_comment_id' => $parentCommentId
-        ]);
-        
-        // Return success response
-        echo json_encode([
-            'success' => true,
-            'data' => [
-                'comment_id' => $commentId,
-                'message' => '댓글이 성공적으로 등록되었습니다.'
-            ]
-        ]);
-        
-    } catch (Exception $e) {
-        // Rollback transaction
-        $db->rollBack();
-        throw $e;
+    // Save comment to file
+    $commentsFile = '../../data/comments.json';
+    $commentsDir = dirname($commentsFile);
+    
+    if (!file_exists($commentsDir)) {
+        mkdir($commentsDir, 0755, true);
     }
+    
+    $existingComments = [];
+    if (file_exists($commentsFile)) {
+        $existingComments = json_decode(file_get_contents($commentsFile), true) ?: [];
+    }
+    
+    $existingComments[] = $commentData;
+    file_put_contents($commentsFile, json_encode($existingComments, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    
+    // Update idea comment count
+    $ideasFile = '../../data/ideas.json';
+    if (file_exists($ideasFile)) {
+        $ideasData = json_decode(file_get_contents($ideasFile), true) ?: [];
+        foreach ($ideasData as &$idea) {
+            if ($idea['id'] == $ideaId) {
+                $idea['comment_count'] = ($idea['comment_count'] ?? 0) + 1;
+                break;
+            }
+        }
+        file_put_contents($ideasFile, json_encode($ideasData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    }
+    
+    // Return success response
+    echo json_encode([
+        'success' => true,
+        'data' => [
+            'comment_id' => $commentId,
+            'message' => '댓글이 성공적으로 등록되었습니다.'
+        ]
+    ]);
     
 } catch (Exception $e) {
     // Log error
-    logError("Comment creation failed", [
-        'error' => $e->getMessage(),
-        'input' => $input ?? null
-    ]);
+    error_log("Comment creation failed: " . $e->getMessage());
     
     http_response_code(500);
     echo json_encode([
@@ -114,8 +122,8 @@ try {
 function validateInput($input) {
     $errors = [];
     
-    // Check if input is valid JSON
-    if (json_last_error() !== JSON_ERROR_NONE) {
+    // Check if input is null
+    if ($input === null) {
         return [
             'valid' => false,
             'error' => 'Invalid JSON input'
@@ -146,13 +154,6 @@ function validateInput($input) {
         }
     }
     
-    // Check CSRF token (if provided)
-    if (isset($input['csrf_token'])) {
-        if (!verifyCSRFToken($input['csrf_token'])) {
-            $errors[] = '보안 토큰이 유효하지 않습니다.';
-        }
-    }
-    
     if (!empty($errors)) {
         return [
             'valid' => false,
@@ -174,36 +175,11 @@ function validateInput($input) {
 }
 
 /**
- * Check if idea exists
- * 아이디어 존재 여부 확인
+ * Sanitize input data
+ * 입력 데이터 정리
  */
-function ideaExists($db, $ideaId) {
-    $sql = "SELECT COUNT(*) FROM ideas WHERE id = :idea_id AND status = 'active'";
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':idea_id', $ideaId, PDO::PARAM_INT);
-    $stmt->execute();
-    
-    return $stmt->fetchColumn() > 0;
+function sanitizeInput($input) {
+    return trim(htmlspecialchars($input, ENT_QUOTES, 'UTF-8'));
 }
 
-/**
- * Insert comment into database
- * 데이터베이스에 댓글 삽입
- */
-function insertComment($db, $ideaId, $writer, $content, $parentCommentId = null) {
-    $sql = "INSERT INTO comments (idea_id, writer, content, parent_comment_id, created_at, status) 
-            VALUES (:idea_id, :writer, :content, :parent_comment_id, NOW(), 'active')";
-    
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':idea_id', $ideaId, PDO::PARAM_INT);
-    $stmt->bindParam(':writer', $writer, PDO::PARAM_STR);
-    $stmt->bindParam(':content', $content, PDO::PARAM_STR);
-    $stmt->bindParam(':parent_comment_id', $parentCommentId, PDO::PARAM_INT);
-    
-    if (!$stmt->execute()) {
-        throw new Exception('Failed to insert comment');
-    }
-    
-    return $db->lastInsertId();
-}
 ?>

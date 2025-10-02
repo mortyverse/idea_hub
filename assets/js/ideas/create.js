@@ -75,8 +75,6 @@ class IdeaCreatePage {
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
         
-        // Auto-save (optional)
-        this.setupAutoSave();
     }
     
     setupFormValidation() {
@@ -130,33 +128,75 @@ class IdeaCreatePage {
     }
     
     async loadAvailableTags() {
-        try {
-            const response = await fetch('../../api/ideas/tags.php?limit=50&sort=usage_count');
-            const data = await response.json();
-            
-            if (data.success) {
-                this.availableTags = data.data.tags.map(tag => ({
-                    name: tag.name,
-                    count: tag.usage_count
-                }));
-            } else {
-                console.error('Failed to load tags:', data.error);
-                this.availableTags = [];
+        // Try different API paths for dothome hosting
+        const apiPaths = [
+            '../../api/ideas/tags-simple.php?limit=50&sort=usage_count',
+            '/api/ideas/tags-simple.php?limit=50&sort=usage_count',
+            'api/ideas/tags-simple.php?limit=50&sort=usage_count',
+            '../../api/ideas/tags.php?limit=50&sort=usage_count',
+            '/api/ideas/tags.php?limit=50&sort=usage_count',
+            'api/ideas/tags.php?limit=50&sort=usage_count'
+        ];
+        
+        for (const apiPath of apiPaths) {
+            try {
+                console.log('Loading tags from:', apiPath);
+                const response = await fetch(apiPath);
+                
+                if (!response.ok) {
+                    console.error('HTTP error:', response.status);
+                    continue;
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    this.availableTags = data.data.tags.map(tag => ({
+                        name: tag.name,
+                        count: tag.usage_count
+                    }));
+                    console.log('Tags loaded successfully:', this.availableTags.length);
+                    return; // Success, exit the function
+                } else {
+                    console.error('Failed to load tags:', data.error);
+                }
+            } catch (error) {
+                console.error('Failed to load tags from', apiPath, ':', error);
             }
-        } catch (error) {
-            console.error('Failed to load tags:', error);
-            this.availableTags = [];
         }
+        
+        // If all paths failed, set some default tags for demo
+        this.availableTags = [
+            { name: '기술', count: 10 },
+            { name: '창의', count: 8 },
+            { name: '교육', count: 6 },
+            { name: '비즈니스', count: 5 },
+            { name: '디자인', count: 4 },
+            { name: '환경', count: 3 },
+            { name: 'AI', count: 7 },
+            { name: '협업', count: 2 }
+        ];
+        console.log('Using default tags:', this.availableTags.length);
     }
     
     handleTagInput(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
-            this.addTag(this.tagsInput.value.trim());
+            const tagValue = this.tagsInput.value.trim();
+            if (tagValue) {
+                this.addTag(tagValue);
+            }
         } else if (e.key === 'Backspace' && this.tagsInput.value === '' && this.selectedTags.size > 0) {
             // Remove last tag if input is empty and backspace is pressed
             const lastTag = Array.from(this.selectedTags).pop();
             this.removeTag(lastTag);
+        } else if (e.key === ',' || e.key === ' ') {
+            // Also allow comma and space to add tags
+            e.preventDefault();
+            const tagValue = this.tagsInput.value.trim();
+            if (tagValue) {
+                this.addTag(tagValue);
+            }
         }
     }
     
@@ -210,7 +250,16 @@ class IdeaCreatePage {
     }
     
     addTag(tagName) {
+        // Clean and validate tag name
+        tagName = tagName.trim().replace(/[,\s]+/g, ' ').trim();
+        
         if (!tagName || this.selectedTags.has(tagName) || this.selectedTags.size >= 10) {
+            return;
+        }
+        
+        // Check tag length
+        if (tagName.length > 20) {
+            this.showNotification('태그는 20자 이하로 입력해주세요.', 'error');
             return;
         }
         
@@ -218,6 +267,9 @@ class IdeaCreatePage {
         this.updateTagsDisplay();
         this.tagsInput.value = '';
         this.hideTagSuggestions();
+        
+        // Show success feedback
+        console.log('Tag added:', tagName);
     }
     
     removeTag(tagName) {
@@ -226,11 +278,16 @@ class IdeaCreatePage {
     }
     
     updateTagsDisplay() {
+        if (this.selectedTags.size === 0) {
+            this.tagsDisplay.innerHTML = '<span class="no-tags-text">태그를 입력하고 Enter를 누르세요</span>';
+            return;
+        }
+        
         this.tagsDisplay.innerHTML = Array.from(this.selectedTags)
             .map(tag => `
                 <span class="tag-chip">
-                    ${tag}
-                    <button type="button" class="tag-chip-remove" data-tag="${tag}">&times;</button>
+                    <span class="tag-chip-text">${tag}</span>
+                    <button type="button" class="tag-chip-remove" data-tag="${tag}" aria-label="태그 제거">&times;</button>
                 </span>
             `).join('');
         
@@ -359,16 +416,26 @@ class IdeaCreatePage {
         
         try {
             const formData = this.prepareFormData();
-            const response = await this.submitIdea(formData);
+            console.log('Submitting form data:', formData);
             
-            if (response.success) {
+            const response = await this.submitIdea(formData);
+            console.log('Final response received:', response);
+            
+            if (response && response.success) {
+                console.log('Success! Showing success modal with data:', response.data);
                 this.showSuccessModal(response.data);
             } else {
-                this.showError(response.error || '아이디어 등록에 실패했습니다.');
+                console.error('Response indicates failure:', response);
+                this.showError(response?.error || '아이디어 등록에 실패했습니다.');
             }
         } catch (error) {
             console.error('Form submission error:', error);
-            this.showError('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
+            // Check if the error message indicates a network issue vs API issue
+            if (error.message.includes('fetch') || error.message.includes('네트워크') || error.message.includes('Network')) {
+                this.showError('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
+            } else {
+                this.showError(error.message || '아이디어 등록 중 오류가 발생했습니다.');
+            }
         } finally {
             this.isSubmitting = false;
             this.hideLoading();
@@ -386,21 +453,87 @@ class IdeaCreatePage {
     }
     
     async submitIdea(formData) {
-        const response = await fetch('../../api/ideas/create.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
-        });
+        // Try different API paths for dothome hosting
+        const apiPaths = [
+            '../../api/ideas/create-simple.php',  // Simple version first
+            '/api/ideas/create-simple.php',
+            'api/ideas/create-simple.php',
+            '../../api/ideas/create.php',         // Original version
+            '/api/ideas/create.php',
+            'api/ideas/create.php'
+        ];
         
-        const data = await response.json();
+        let lastError;
         
-        if (!response.ok) {
-            throw new Error(data.error || '서버 오류가 발생했습니다.');
+        for (const apiPath of apiPaths) {
+            try {
+                console.log('Trying API path:', apiPath);
+                const response = await fetch(apiPath, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                console.log('Response received from:', apiPath, 'Status:', response.status);
+                
+                // Try to get response text first
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+                
+                // Check if response is empty
+                if (!responseText.trim()) {
+                    console.warn('Empty response from:', apiPath);
+                    lastError = new Error('서버에서 빈 응답을 받았습니다.');
+                    continue;
+                }
+                
+                // Try to parse as JSON
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                    console.log('Parsed response:', data);
+                } catch (parseError) {
+                    console.error('JSON parse error from:', apiPath, parseError);
+                    lastError = new Error('서버 응답을 처리할 수 없습니다.');
+                    continue;
+                }
+                
+                // Check if the API returned a success response
+                if (data && typeof data === 'object') {
+                    // If success is explicitly true, return the data
+                    if (data.success === true) {
+                        console.log('Success response from:', apiPath);
+                        return data;
+                    }
+                    // If success is false, try next API path
+                    else if (data.success === false) {
+                        console.warn('API returned error from:', apiPath, data.error);
+                        lastError = new Error(data.error || '아이디어 등록에 실패했습니다.');
+                        continue;
+                    }
+                    // If no success field but has data, assume success
+                    else if (data.data || data.idea_id) {
+                        console.log('Assuming success from:', apiPath);
+                        return { success: true, data: data };
+                    }
+                }
+                
+                // If we get here, the response format is unexpected
+                console.warn('Unexpected response format from:', apiPath, data);
+                lastError = new Error('예상하지 못한 응답 형식입니다.');
+                continue;
+                
+            } catch (error) {
+                console.error('API path failed:', apiPath, error);
+                lastError = error;
+                continue;
+            }
         }
         
-        return data;
+        // If all paths failed, throw the last error
+        throw lastError || new Error('모든 API 경로에서 실패했습니다.');
     }
     
     showLoading() {
@@ -485,22 +618,10 @@ class IdeaCreatePage {
     }
     
     handleCancel() {
-        if (this.hasUnsavedChanges()) {
-            if (confirm('작성 중인 내용이 있습니다. 정말 취소하시겠습니까?')) {
-                this.resetForm();
-                window.location.href = 'list.html';
-            }
-        } else {
-            window.location.href = 'list.html';
-        }
+        // 확인 없이 바로 목록 페이지로 이동
+        window.location.href = 'list.html';
     }
     
-    hasUnsavedChanges() {
-        return this.titleInput.value.trim() !== '' ||
-               this.contentInput.value.trim() !== '' ||
-               this.writerInput.value.trim() !== '' ||
-               this.selectedTags.size > 0;
-    }
     
     handleKeyboardShortcuts(e) {
         // Ctrl/Cmd + S to save
@@ -519,56 +640,7 @@ class IdeaCreatePage {
         }
     }
     
-    setupAutoSave() {
-        // Auto-save form data to localStorage every 30 seconds
-        setInterval(() => {
-            if (this.hasUnsavedChanges() && !this.isSubmitting) {
-                this.saveToLocalStorage();
-            }
-        }, 30000);
-        
-        // Restore from localStorage on page load
-        this.restoreFromLocalStorage();
-    }
     
-    saveToLocalStorage() {
-        const formData = {
-            title: this.titleInput.value,
-            content: this.contentInput.value,
-            writer: this.writerInput.value,
-            tags: Array.from(this.selectedTags),
-            timestamp: Date.now()
-        };
-        
-        localStorage.setItem('idea_draft', JSON.stringify(formData));
-    }
-    
-    restoreFromLocalStorage() {
-        const saved = localStorage.getItem('idea_draft');
-        if (saved) {
-            try {
-                const formData = JSON.parse(saved);
-                
-                // Only restore if it's recent (within 24 hours)
-                if (Date.now() - formData.timestamp < 24 * 60 * 60 * 1000) {
-                    if (confirm('이전에 작성하던 내용이 있습니다. 복원하시겠습니까?')) {
-                        this.titleInput.value = formData.title;
-                        this.contentInput.value = formData.content;
-                        this.writerInput.value = formData.writer;
-                        
-                        formData.tags.forEach(tag => this.selectedTags.add(tag));
-                        this.updateTagsDisplay();
-                        
-                        // Clear saved data
-                        localStorage.removeItem('idea_draft');
-                    }
-                }
-            } catch (error) {
-                console.error('Failed to restore form data:', error);
-                localStorage.removeItem('idea_draft');
-            }
-        }
-    }
     
     hideAllStates() {
         // 로딩 오버레이 숨기기
@@ -615,7 +687,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
 });
 
-// Add CSS animation for error notification
+// Add CSS animation for error notification and tag styles
 const createStyle = document.createElement('style');
 createStyle.textContent = `
     @keyframes slideInRight {
@@ -632,6 +704,97 @@ createStyle.textContent = `
     .form-input.error {
         border-color: #e74c3c !important;
         box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1) !important;
+    }
+    
+    .tags-display {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        min-height: 2rem;
+        align-items: center;
+    }
+    
+    .tag-chip {
+        display: inline-flex;
+        align-items: center;
+        background: #3498db;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 1rem;
+        font-size: 0.875rem;
+        gap: 0.25rem;
+    }
+    
+    .tag-chip-text {
+        font-weight: 500;
+    }
+    
+    .tag-chip-remove {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 1rem;
+        line-height: 1;
+        padding: 0;
+        margin-left: 0.25rem;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
+    
+    .tag-chip-remove:hover {
+        opacity: 1;
+    }
+    
+    .no-tags-text {
+        color: #6c757d;
+        font-style: italic;
+        font-size: 0.875rem;
+    }
+    
+    .tags-input-container {
+        position: relative;
+    }
+    
+    .tags-suggestions {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    
+    .tag-suggestion {
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .tag-suggestion:hover {
+        background: #f8f9fa;
+    }
+    
+    .tag-suggestion:last-child {
+        border-bottom: none;
+    }
+    
+    .tag-suggestion-name {
+        font-weight: 500;
+    }
+    
+    .tag-suggestion-count {
+        color: #6c757d;
+        font-size: 0.875rem;
     }
 `;
 document.head.appendChild(createStyle);

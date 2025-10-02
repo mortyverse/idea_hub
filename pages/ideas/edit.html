@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이디어 수정 - 아이디어 허브</title>
+    <meta name="description" content="아이디어를 수정하고 개선하세요. 집단지성으로 아이디어를 발전시키는 플랫폼입니다.">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../../assets/css/common/main.css">
+    <link rel="stylesheet" href="../../assets/css/common/components.css">
+    <link rel="stylesheet" href="../../assets/css/common/responsive.css">
+    <link rel="stylesheet" href="../../assets/css/ideas/edit.css">
+    
+    <!-- Web Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="../../assets/images/icons/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Main container for component loading -->
+    <div class="main-container">
+        <!-- Header Component -->
+        <div id="header-container"></div>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+        <div class="container">
+            <!-- Loading State -->
+            <div id="loading-state" class="loading-state">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                </div>
+                <p class="loading-text">아이디어를 불러오는 중...</p>
+            </div>
+            
+            <!-- Error State -->
+            <div id="error-state" class="error-state" style="display: none;">
+                <div class="error-icon">⚠️</div>
+                <h3 class="error-title">아이디어를 찾을 수 없습니다</h3>
+                <p class="error-description">
+                    요청하신 아이디어가 존재하지 않거나 수정 권한이 없습니다.<br>
+                    아이디어 목록으로 돌아가서 다른 아이디어를 확인해보세요.
+                </p>
+                <div class="error-actions">
+                    <a href="list.html" class="btn btn-primary">
+                        <span class="btn-icon">📋</span>
+                        <span class="btn-text">아이디어 목록</span>
+                    </a>
+                    <a href="create.html" class="btn btn-outline">
+                        <span class="btn-icon">➕</span>
+                        <span class="btn-text">새 아이디어 작성</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Edit Form Content -->
+            <div id="edit-form-content" class="edit-form-content" style="display: none;">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="page-header-content">
+                        <div class="page-title-section">
+                            <h1 class="page-title">
+                                <span class="page-title-icon">✏️</span>
+                                <span class="page-title-text">아이디어 수정</span>
+                            </h1>
+                            <p class="page-description">
+                                아이디어를 수정하고 더욱 발전시켜보세요.
+                            </p>
+                        </div>
+                        
+                        <!-- Breadcrumb -->
+                        <nav class="breadcrumb" aria-label="페이지 경로">
+                            <ol class="breadcrumb-list">
+                                <li class="breadcrumb-item">
+                                    <a href="../../index.html" class="breadcrumb-link">홈</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="list.html" class="breadcrumb-link">아이디어</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="#" id="detail-link" class="breadcrumb-link">아이디어 상세</a>
+                                </li>
+                                <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+                                    수정
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+                
+                <!-- Main Content Layout -->
+                <div class="main-layout">
+                    <!-- Left Column: Idea Edit Form -->
+                    <div class="main-content-column">
+                        <div class="idea-form-container">
+                            <form id="idea-edit-form" class="idea-form" novalidate>
+                                <!-- Hidden Fields -->
+                                <input type="hidden" id="idea-id" name="idea_id" value="">
+                                <input type="hidden" id="csrf-token" name="csrf_token" value="">
+                                <input type="hidden" id="original-writer" name="original_writer" value="">
+                                
+                                <!-- Form Card -->
+                                <div class="form-card">
+                                    <div class="form-card-header">
+                                        <h2 class="form-card-title">아이디어 정보 수정</h2>
+                                        <p class="form-card-description">
+                                            아이디어의 내용을 수정하고 개선해보세요.
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="form-card-body">
+                                        <!-- Title Field -->
+                                        <div class="form-field">
+                                            <label for="idea-title" class="form-label">
+                                                <span class="form-label-text">아이디어 제목</span>
+                                                <span class="form-label-required" aria-label="필수 입력">*</span>
+                                            </label>
+                                            <div class="form-input-container">
+                                                <input 
+                                                    type="text" 
+                                                    id="idea-title" 
+                                                    name="title" 
+                                                    class="form-input" 
+                                                    placeholder="아이디어의 핵심을 담은 제목을 입력하세요"
+                                                    maxlength="100"
+                                                    required
+                                                    aria-describedby="title-help title-error"
+                                                >
+                                                <div class="form-input-feedback">
+                                                    <span id="title-help" class="form-help-text">
+                                                        최대 100자까지 입력 가능합니다.
+                                                    </span>
+                                                    <span id="title-error" class="form-error-text" style="display: none;"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Content Field -->
+                                        <div class="form-field">
+                                            <label for="idea-content" class="form-label">
+                                                <span class="form-label-text">아이디어 상세 설명</span>
+                                                <span class="form-label-required" aria-label="필수 입력">*</span>
+                                            </label>
+                                            <div class="form-input-container">
+                                                <textarea 
+                                                    id="idea-content" 
+                                                    name="content" 
+                                                    class="form-textarea" 
+                                                    placeholder="아이디어의 배경, 목적, 구체적인 내용, 기대 효과 등을 자세히 설명해주세요."
+                                                    maxlength="5000"
+                                                    rows="12"
+                                                    required
+                                                    aria-describedby="content-help content-error content-counter"
+                                                ></textarea>
+                                                <div class="form-input-feedback">
+                                                    <div class="form-feedback-row">
+                                                        <span id="content-help" class="form-help-text">
+                                                            아이디어를 구체적이고 명확하게 설명해주세요.
+                                                        </span>
+                                                        <span id="content-counter" class="form-counter">
+                                                            <span class="counter-current">0</span> / <span class="counter-max">5,000</span>
+                                                        </span>
+                                                    </div>
+                                                    <span id="content-error" class="form-error-text" style="display: none;"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Tags Field -->
+                                        <div class="form-field">
+                                            <label for="idea-tags" class="form-label">
+                                                <span class="form-label-text">태그</span>
+                                                <span class="form-label-optional" aria-label="선택 입력">(선택)</span>
+                                            </label>
+                                            <div class="form-input-container">
+                                                <div class="tags-input-container">
+                                                    <div class="tags-display" id="tags-display">
+                                                        <!-- Selected tags will be displayed here -->
+                                                    </div>
+                                                    <input 
+                                                        type="text" 
+                                                        id="idea-tags" 
+                                                        name="tags" 
+                                                        class="form-input tags-input" 
+                                                        placeholder="태그를 입력하고 Enter를 누르세요 (예: 기술, 창의, 교육)"
+                                                        maxlength="20"
+                                                        aria-describedby="tags-help tags-error"
+                                                    >
+                                                    <div class="tags-suggestions" id="tags-suggestions" style="display: none;">
+                                                        <!-- Tag suggestions will be displayed here -->
+                                                    </div>
+                                                </div>
+                                                <div class="form-input-feedback">
+                                                    <span id="tags-help" class="form-help-text">
+                                                        관련 키워드를 태그로 추가하면 더 많은 사람들이 찾을 수 있습니다.
+                                                    </span>
+                                                    <span id="tags-error" class="form-error-text" style="display: none;"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Writer Field (Read-only) -->
+                                        <div class="form-field">
+                                            <label for="idea-writer" class="form-label">
+                                                <span class="form-label-text">작성자</span>
+                                            </label>
+                                            <div class="form-input-container">
+                                                <input 
+                                                    type="text" 
+                                                    id="idea-writer" 
+                                                    name="writer" 
+                                                    class="form-input form-input-readonly" 
+                                                    readonly
+                                                    aria-describedby="writer-help"
+                                                >
+                                                <div class="form-input-feedback">
+                                                    <span id="writer-help" class="form-help-text">
+                                                        작성자는 수정할 수 없습니다.
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Edit Info -->
+                                        <div class="edit-info">
+                                            <div class="edit-info-item">
+                                                <span class="edit-info-label">생성일:</span>
+                                                <span id="created-date" class="edit-info-value">-</span>
+                                            </div>
+                                            <div class="edit-info-item">
+                                                <span class="edit-info-label">마지막 수정:</span>
+                                                <span id="updated-date" class="edit-info-value">-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Preview Card -->
+                                <div class="form-card preview-card" id="preview-card" style="display: none;">
+                                    <div class="form-card-header">
+                                        <h2 class="form-card-title">미리보기</h2>
+                                        <p class="form-card-description">
+                                            수정한 내용이 어떻게 표시될지 미리 확인해보세요.
+                                        </p>
+                                    </div>
+                                    <div class="form-card-body">
+                                        <div class="idea-preview">
+                                            <h3 class="preview-title" id="preview-title">제목이 여기에 표시됩니다</h3>
+                                            <div class="preview-meta">
+                                                <span class="preview-writer" id="preview-writer">작성자</span>
+                                                <span class="preview-date" id="preview-date">방금 전</span>
+                                            </div>
+                                            <div class="preview-content" id="preview-content">
+                                                내용이 여기에 표시됩니다...
+                                            </div>
+                                            <div class="preview-tags" id="preview-tags">
+                                                <!-- Tags will be displayed here -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Form Actions -->
+                                <div class="form-actions">
+                                    <div class="form-actions-left">
+                                        <button type="button" id="preview-toggle" class="btn btn-outline">
+                                            <span class="btn-icon">👁️</span>
+                                            <span class="btn-text">미리보기</span>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="form-actions-right">
+                                        <button type="button" id="cancel-btn" class="btn btn-outline">
+                                            <span class="btn-icon">❌</span>
+                                            <span class="btn-text">취소</span>
+                                        </button>
+                                        <button type="submit" id="submit-btn" class="btn btn-primary">
+                                            <span class="btn-icon">💾</span>
+                                            <span class="btn-text">수정 완료</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column: Help Section -->
+                    <div class="sidebar-column">
+                        <div class="help-section">
+                            <div class="help-card">
+                                <div class="help-card-header">
+                                    <h3 class="help-card-title">
+                                        <span class="help-icon">✏️</span>
+                                        <span class="help-title-text">수정 시 주의사항</span>
+                                    </h3>
+                                </div>
+                                <div class="help-card-body">
+                                    <ul class="help-tips-list">
+                                        <li class="help-tip">
+                                            <strong>신중한 수정:</strong> 다른 사람들이 이미 댓글을 달았을 수 있으니 신중하게 수정하세요.
+                                        </li>
+                                        <li class="help-tip">
+                                            <strong>내용 개선:</strong> 더 명확하고 구체적인 내용으로 개선해보세요.
+                                        </li>
+                                        <li class="help-tip">
+                                            <strong>태그 정리:</strong> 관련성 높은 태그로 정리하여 검색되기 쉽게 하세요.
+                                        </li>
+                                        <li class="help-tip">
+                                            <strong>수정 이력:</strong> 수정 시간이 기록되어 다른 사용자들이 확인할 수 있습니다.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer Component -->
+    <div id="footer-container"></div>
+    
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+        </div>
+        <p class="loading-text">수정 중...</p>
+    </div>
+    
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">아이디어 수정 완료!</h3>
+                <button type="button" class="modal-close" aria-label="모달 닫기">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="success-message">
+                    <div class="success-icon">✅</div>
+                    <p class="success-text">
+                        아이디어가 성공적으로 수정되었습니다.<br>
+                        수정된 내용을 확인해보세요!
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="view-idea-btn" class="btn btn-primary">
+                    <span class="btn-icon">👀</span>
+                    <span class="btn-text">아이디어 보기</span>
+                </button>
+                <button type="button" id="continue-edit-btn" class="btn btn-outline">
+                    <span class="btn-icon">✏️</span>
+                    <span class="btn-text">계속 수정</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Component -->
+    <div id="footer-container"></div>
+    
+    <!-- JavaScript Files -->
+    <script src="../../assets/js/common/component-loader.js"></script>
+    <script src="../../assets/js/common/main.js"></script>
+    <script src="../../assets/js/common/api.js"></script>
+    <script src="../../assets/js/common/utils.js"></script>
+    <script src="../../assets/js/ideas/edit.js"></script>
+    </div> <!-- End main-container -->
+</body>
+</html>

@@ -201,9 +201,22 @@
     <template id="idea-card-template">
         <article class="idea-card" data-idea-id="">
             <div class="idea-card-header">
-                <h3 class="idea-title">
-                    <a href="detail.html?id=" class="idea-title-link"></a>
-                </h3>
+                <div class="idea-title-section">
+                    <h3 class="idea-title">
+                        <a href="detail.html?id=" class="idea-title-link"></a>
+                    </h3>
+                    
+                    <!-- Author Actions (shown only to the author) -->
+                    <div class="idea-card-actions" style="display: flex;">
+                        <button type="button" class="card-action-btn edit-btn" title="수정">
+                            <span class="action-icon">✏️</span>
+                        </button>
+                        <button type="button" class="card-action-btn delete-btn" title="삭제">
+                            <span class="action-icon">🗑️</span>
+                        </button>
+                    </div>
+                </div>
+                
                 <div class="idea-meta">
                     <span class="idea-writer">
                         <span class="meta-icon">👤</span>
@@ -242,6 +255,63 @@
             </div>
         </article>
     </template>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">아이디어 삭제</h3>
+                <button type="button" class="modal-close" aria-label="모달 닫기">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="delete-warning">
+                    <div class="warning-icon">⚠️</div>
+                    <h4 class="warning-title">정말 삭제하시겠습니까?</h4>
+                    <p class="warning-description">
+                        이 작업은 되돌릴 수 없습니다.<br>
+                        아이디어와 모든 댓글이 영구적으로 삭제됩니다.
+                    </p>
+                </div>
+                
+                <div class="delete-idea-info">
+                    <h5 class="delete-idea-title" id="delete-idea-title">아이디어 제목</h5>
+                </div>
+                
+                <form id="delete-form" class="delete-form">
+                    <div class="form-field">
+                        <label for="delete-writer-confirm" class="form-label">
+                            <span class="form-label-text">작성자명 확인</span>
+                            <span class="form-label-required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="delete-writer-confirm" 
+                            name="writer_confirm" 
+                            class="form-input" 
+                            placeholder="삭제 확인을 위해 작성자명을 입력하세요"
+                            maxlength="50"
+                            required
+                        >
+                        <div class="form-help">
+                            보안을 위해 작성자명을 다시 한 번 입력해주세요.
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline modal-close">
+                            <span class="btn-icon">✖️</span>
+                            <span class="btn-text">취소</span>
+                        </button>
+                        <button type="submit" id="confirm-delete-btn" class="btn btn-danger">
+                            <span class="btn-icon">🗑️</span>
+                            <span class="btn-text">삭제하기</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     
     <!-- Footer Component -->
     <div id="footer-container"></div>

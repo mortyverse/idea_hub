@@ -45,6 +45,16 @@ class IdeasListPage {
         // Template
         this.ideaCardTemplate = document.getElementById('idea-card-template');
         
+        // Delete modal elements
+        this.deleteModal = document.getElementById('delete-modal');
+        this.deleteForm = document.getElementById('delete-form');
+        this.deleteIdeaTitle = document.getElementById('delete-idea-title');
+        this.deleteWriterConfirm = document.getElementById('delete-writer-confirm');
+        this.confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+        
+        // Current idea being deleted
+        this.currentDeleteIdea = null;
+        
         // Data
         this.ideas = [];
         this.totalCount = 0;
@@ -99,6 +109,19 @@ class IdeasListPage {
         // Pagination
         this.prevPageBtn.addEventListener('click', () => this.goToPreviousPage());
         this.nextPageBtn.addEventListener('click', () => this.goToNextPage());
+        
+        // Delete modal
+        if (this.deleteForm) {
+            this.deleteForm.addEventListener('submit', (e) => this.handleDeleteSubmit(e));
+        }
+        
+        // Modal close events
+        document.querySelectorAll('.modal-close').forEach(btn => {
+            btn.addEventListener('click', (e) => this.handleModalClose(e));
+        });
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => this.handleModalClose(e));
+        });
         
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
@@ -301,6 +324,39 @@ class IdeasListPage {
             tagElement.textContent = tag;
             tagsContainer.appendChild(tagElement);
         });
+        
+        // Author actions (show for all cards, let server validate)
+        const cardActions = card.querySelector('.idea-card-actions');
+        const editBtn = card.querySelector('.edit-btn');
+        const deleteBtn = card.querySelector('.delete-btn');
+        
+        console.log('Card actions elements:', {
+            cardActions: !!cardActions,
+            editBtn: !!editBtn,
+            deleteBtn: !!deleteBtn,
+            ideaId: idea.id
+        });
+        
+        if (cardActions && editBtn && deleteBtn) {
+            cardActions.style.display = 'flex';
+            console.log('Author actions shown for idea:', idea.id, 'writer:', idea.writer);
+            
+            editBtn.addEventListener('click', (e) => {
+                console.log('Edit button clicked for idea:', idea.id);
+                e.preventDefault();
+                e.stopPropagation();
+                this.handleEdit(idea.id);
+            });
+            
+            deleteBtn.addEventListener('click', (e) => {
+                console.log('Delete button clicked for idea:', idea.id);
+                e.preventDefault();
+                e.stopPropagation();
+                this.showDeleteModal(idea);
+            });
+        } else {
+            console.log('Some action elements missing for idea:', idea.id);
+        }
         
         return card;
     }
@@ -512,6 +568,183 @@ class IdeasListPage {
             timeout = setTimeout(later, wait);
         };
     }
+    
+    // =============================================
+    // Author Actions (Edit/Delete)
+    // =============================================
+    
+    handleEdit(ideaId) {
+        console.log('handleEdit called, redirecting to edit page for idea:', ideaId);
+        // Redirect to edit page
+        window.location.href = `edit.html?id=${ideaId}`;
+    }
+    
+    showDeleteModal(idea) {
+        console.log('showDeleteModal called for idea:', idea?.title);
+        if (this.deleteModal && idea) {
+            this.currentDeleteIdea = idea;
+            this.deleteIdeaTitle.textContent = idea.title;
+            this.deleteWriterConfirm.value = '';
+            this.deleteModal.style.display = 'flex';
+            this.deleteWriterConfirm.focus();
+            console.log('Delete modal shown');
+        } else {
+            console.log('Delete modal or idea not found:', {
+                deleteModal: !!this.deleteModal,
+                idea: !!idea
+            });
+        }
+    }
+    
+    hideDeleteModal() {
+        if (this.deleteModal) {
+            this.deleteModal.style.display = 'none';
+            this.deleteWriterConfirm.value = '';
+            this.currentDeleteIdea = null;
+        }
+    }
+    
+    async handleDeleteSubmit(e) {
+        e.preventDefault();
+        
+        if (!this.currentDeleteIdea) {
+            this.showNotification('삭제할 아이디어를 찾을 수 없습니다.', 'error');
+            return;
+        }
+        
+        const writerConfirm = this.deleteWriterConfirm.value.trim();
+        
+        if (!writerConfirm) {
+            this.showNotification('작성자명을 입력해주세요.', 'error');
+            return;
+        }
+        
+        if (writerConfirm !== this.currentDeleteIdea.writer) {
+            this.showNotification('작성자명이 일치하지 않습니다.', 'error');
+            return;
+        }
+        
+        // Disable submit button
+        this.confirmDeleteBtn.disabled = true;
+        this.confirmDeleteBtn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">삭제 중...</span>';
+        
+        try {
+            await this.deleteIdea(this.currentDeleteIdea.id, writerConfirm);
+        } catch (error) {
+            console.error('Delete failed:', error);
+            this.showNotification('삭제 중 오류가 발생했습니다.', 'error');
+        } finally {
+            // Re-enable submit button
+            this.confirmDeleteBtn.disabled = false;
+            this.confirmDeleteBtn.innerHTML = '<span class="btn-icon">🗑️</span><span class="btn-text">삭제하기</span>';
+        }
+    }
+    
+    async deleteIdea(ideaId, writerConfirm) {
+        const apiPaths = [
+            '../../api/ideas/delete.php',
+            '../api/ideas/delete.php',
+            '/api/ideas/delete.php',
+            'api/ideas/delete.php'
+        ];
+        
+        const requestData = {
+            idea_id: ideaId,
+            original_writer: writerConfirm
+        };
+        
+        let response = null;
+        let lastError = null;
+        
+        for (const apiPath of apiPaths) {
+            try {
+                response = await fetch(apiPath, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                if (response.ok) {
+                    break;
+                } else {
+                    console.error('HTTP error:', response.status);
+                    continue;
+                }
+            } catch (error) {
+                console.error('API path failed:', apiPath, error);
+                lastError = error;
+                continue;
+            }
+        }
+        
+        if (!response || !response.ok) {
+            throw new Error('삭제 API 호출에 실패했습니다.');
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            this.showNotification('아이디어가 성공적으로 삭제되었습니다.', 'success');
+            this.hideDeleteModal();
+            
+            // Reload the ideas list
+            this.loadIdeas();
+        } else {
+            throw new Error(data.error || '삭제에 실패했습니다.');
+        }
+    }
+    
+    handleModalClose(e) {
+        const modal = e.target.closest('.modal');
+        if (modal && modal.id === 'delete-modal') {
+            this.hideDeleteModal();
+        }
+    }
+    
+    showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            max-width: 400px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: slideInRight 0.3s ease-out;
+        `;
+        
+        // Set background color based on type
+        switch (type) {
+            case 'success':
+                notification.style.background = '#10b981';
+                break;
+            case 'error':
+                notification.style.background = '#ef4444';
+                break;
+            case 'warning':
+                notification.style.background = '#f59e0b';
+                break;
+            default:
+                notification.style.background = '#3b82f6';
+                break;
+        }
+        
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+    }
 }
 
 // Initialize when DOM is loaded
@@ -523,7 +756,13 @@ function initializePage() {
     pageInitialized = true;
     
     console.log('Initializing IdeasListPage...');
-    new IdeasListPage();
+    try {
+        const listPage = new IdeasListPage();
+        console.log('IdeasListPage instance created successfully:', listPage);
+        window.ideasListPage = listPage; // For debugging
+    } catch (error) {
+        console.error('Failed to initialize IdeasListPage:', error);
+    }
 }
 
 // 컴포넌트 로드 완료 후 페이지 초기화

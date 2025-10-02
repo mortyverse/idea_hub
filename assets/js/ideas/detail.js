@@ -33,6 +33,18 @@ class IdeaDetailPage {
         this.shareBtn = document.getElementById('share-btn');
         this.bookmarkBtn = document.getElementById('bookmark-btn');
         
+        // Author action buttons
+        this.authorActions = document.getElementById('author-actions');
+        this.editBtn = document.getElementById('edit-btn');
+        this.deleteBtn = document.getElementById('delete-btn');
+        
+        // Debug: Check if elements exist
+        console.log('Detail page elements:', {
+            authorActions: !!this.authorActions,
+            editBtn: !!this.editBtn,
+            deleteBtn: !!this.deleteBtn
+        });
+        
         // Comment elements
         this.commentForm = document.getElementById('comment-form');
         this.commentWriter = document.getElementById('comment-writer');
@@ -50,6 +62,13 @@ class IdeaDetailPage {
         this.shareModal = document.getElementById('share-modal');
         this.shareUrl = document.getElementById('share-url');
         this.copyUrlBtn = document.getElementById('copy-url-btn');
+        
+        // Delete modal elements
+        this.deleteModal = document.getElementById('delete-modal');
+        this.deleteForm = document.getElementById('delete-form');
+        this.deleteIdeaTitle = document.getElementById('delete-idea-title');
+        this.deleteWriterConfirm = document.getElementById('delete-writer-confirm');
+        this.confirmDeleteBtn = document.getElementById('confirm-delete-btn');
         
         // Templates
         this.commentTemplate = document.getElementById('comment-template');
@@ -74,14 +93,46 @@ class IdeaDetailPage {
         this.shareBtn.addEventListener('click', () => this.showShareModal());
         this.bookmarkBtn.addEventListener('click', () => this.handleBookmark());
         
+        // Author action buttons
+        if (this.editBtn) {
+            console.log('Adding edit button listener');
+            this.editBtn.addEventListener('click', () => {
+                console.log('Edit button clicked!');
+                this.handleEdit();
+            });
+        } else {
+            console.log('Edit button not found');
+        }
+        
+        if (this.deleteBtn) {
+            console.log('Adding delete button listener');
+            this.deleteBtn.addEventListener('click', () => {
+                console.log('Delete button clicked!');
+                this.showDeleteModal();
+            });
+        } else {
+            console.log('Delete button not found');
+        }
+        
         // Comment form
         this.commentForm.addEventListener('submit', (e) => this.handleCommentSubmit(e));
         this.commentContent.addEventListener('input', () => this.updateCommentCounter());
         
         // Share modal
         this.copyUrlBtn.addEventListener('click', () => this.copyShareUrl());
-        document.querySelector('.modal-close').addEventListener('click', () => this.hideShareModal());
-        document.querySelector('.modal-overlay').addEventListener('click', () => this.hideShareModal());
+        
+        // Delete modal
+        if (this.deleteForm) {
+            this.deleteForm.addEventListener('submit', (e) => this.handleDeleteSubmit(e));
+        }
+        
+        // Modal close events
+        document.querySelectorAll('.modal-close').forEach(btn => {
+            btn.addEventListener('click', (e) => this.handleModalClose(e));
+        });
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => this.handleModalClose(e));
+        });
         
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
@@ -144,6 +195,9 @@ class IdeaDetailPage {
                 this.renderIdeaDetail();
                 this.renderComments();
                 this.renderRelatedIdeas();
+                
+                // Show author actions if user can edit/delete
+                this.checkAuthorPermissions(this.idea.writer);
                 
                 this.hideLoadingState();
                 this.ideaDetailContent.style.display = 'block';
@@ -491,6 +545,150 @@ class IdeaDetailPage {
             this.ideaDetailContainer.style.display = 'none';
         }
     }
+    
+    // =============================================
+    // Author Actions (Edit/Delete)
+    // =============================================
+    
+    checkAuthorPermissions(ideaWriter) {
+        // Simple check - in production, this should use proper authentication
+        // For now, we'll show the buttons for all users and let the server validate
+        if (this.authorActions) {
+            this.authorActions.style.display = 'flex';
+            console.log('Author actions shown for writer:', ideaWriter);
+        } else {
+            console.log('Author actions element not found');
+        }
+    }
+    
+    handleEdit() {
+        console.log('handleEdit called, redirecting to edit page for idea:', this.ideaId);
+        // Redirect to edit page
+        window.location.href = `edit.html?id=${this.ideaId}`;
+    }
+    
+    showDeleteModal() {
+        console.log('showDeleteModal called for idea:', this.idea?.title);
+        if (this.deleteModal && this.idea) {
+            this.deleteIdeaTitle.textContent = this.idea.title;
+            this.deleteWriterConfirm.value = '';
+            this.deleteModal.style.display = 'flex';
+            this.deleteWriterConfirm.focus();
+            console.log('Delete modal shown');
+        } else {
+            console.log('Delete modal or idea not found:', {
+                deleteModal: !!this.deleteModal,
+                idea: !!this.idea
+            });
+        }
+    }
+    
+    hideDeleteModal() {
+        if (this.deleteModal) {
+            this.deleteModal.style.display = 'none';
+            this.deleteWriterConfirm.value = '';
+        }
+    }
+    
+    async handleDeleteSubmit(e) {
+        e.preventDefault();
+        
+        const writerConfirm = this.deleteWriterConfirm.value.trim();
+        
+        if (!writerConfirm) {
+            this.showNotification('작성자명을 입력해주세요.', 'error');
+            return;
+        }
+        
+        if (writerConfirm !== this.idea.writer) {
+            this.showNotification('작성자명이 일치하지 않습니다.', 'error');
+            return;
+        }
+        
+        // Disable submit button
+        this.confirmDeleteBtn.disabled = true;
+        this.confirmDeleteBtn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">삭제 중...</span>';
+        
+        try {
+            await this.deleteIdea(writerConfirm);
+        } catch (error) {
+            console.error('Delete failed:', error);
+            this.showNotification('삭제 중 오류가 발생했습니다.', 'error');
+        } finally {
+            // Re-enable submit button
+            this.confirmDeleteBtn.disabled = false;
+            this.confirmDeleteBtn.innerHTML = '<span class="btn-icon">🗑️</span><span class="btn-text">삭제하기</span>';
+        }
+    }
+    
+    async deleteIdea(writerConfirm) {
+        const apiPaths = [
+            '../../api/ideas/delete.php',
+            '../api/ideas/delete.php',
+            '/api/ideas/delete.php',
+            'api/ideas/delete.php'
+        ];
+        
+        const requestData = {
+            idea_id: this.ideaId,
+            original_writer: writerConfirm
+        };
+        
+        let response = null;
+        let lastError = null;
+        
+        for (const apiPath of apiPaths) {
+            try {
+                response = await fetch(apiPath, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                if (response.ok) {
+                    break;
+                } else {
+                    console.error('HTTP error:', response.status);
+                    continue;
+                }
+            } catch (error) {
+                console.error('API path failed:', apiPath, error);
+                lastError = error;
+                continue;
+            }
+        }
+        
+        if (!response || !response.ok) {
+            throw new Error('삭제 API 호출에 실패했습니다.');
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            this.showNotification('아이디어가 성공적으로 삭제되었습니다.', 'success');
+            this.hideDeleteModal();
+            
+            // Redirect to list page after a short delay
+            setTimeout(() => {
+                window.location.href = 'list.html';
+            }, 2000);
+        } else {
+            throw new Error(data.error || '삭제에 실패했습니다.');
+        }
+    }
+    
+    handleModalClose(e) {
+        const modal = e.target.closest('.modal');
+        if (modal) {
+            if (modal.id === 'share-modal') {
+                this.hideShareModal();
+            } else if (modal.id === 'delete-modal') {
+                this.hideDeleteModal();
+            }
+        }
+    }
 }
 
 // Initialize when DOM is loaded
@@ -502,7 +700,13 @@ function initializePage() {
     pageInitialized = true;
     
     console.log('Initializing IdeaDetailPage...');
-    new IdeaDetailPage();
+    try {
+        const detailPage = new IdeaDetailPage();
+        console.log('IdeaDetailPage instance created successfully:', detailPage);
+        window.ideaDetailPage = detailPage; // For debugging
+    } catch (error) {
+        console.error('Failed to initialize IdeaDetailPage:', error);
+    }
 }
 
 // 컴포넌트 로드 완료 후 페이지 초기화
